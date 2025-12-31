@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="eazyonrent.Pages.GuesPage"
+            NavigationPage.HasNavigationBar="False"
+             BackgroundColor="#F8F9FA">
+
+    <Grid RowDefinitions="*, Auto">
+
+        <!-- Main Content Area -->
+        <ScrollView Grid.Row="0">
+            <StackLayout Padding="10" Spacing="15">
+
+                <!-- Advertisement Section -->
+                <Frame BackgroundColor="#FF6B35" 
+                       CornerRadius="12" 
+                       Padding="15" 
+                       HasShadow="True">
+                    <StackLayout>
+                        <Label Text="🎉 Special Offers!" 
+                               FontSize="18" 
+                               FontAttributes="Bold" 
+                               TextColor="White" 
+                               HorizontalOptions="Center"/>
+                        <Label Text="Get 20% off on your first rental!" 
+                               FontSize="14" 
+                               TextColor="White" 
+                               HorizontalOptions="Center"/>
+                    </StackLayout>
+                </Frame>
+
+                <!-- Search and Filter Section -->
+                <Grid ColumnDefinitions="*, Auto" 
+                      ColumnSpacing="10">
+
+                    <!-- Search Entry -->
+                    <Entry Grid.Column="0" 
+                           x:Name="SearchEntry"
+                           Placeholder="Search items..." 
+                           BackgroundColor="White"
+                           PlaceholderColor="#999"
+                           TextColor="Black"
+                           FontSize="16"
+                           HeightRequest="45"/>
+
+                    <!-- Category Filter Button -->
+                    <Button Grid.Column="1"
+                            x:Name="CategoryFilterBtn"
+                            Text="🔽 Filter"
+                            BackgroundColor="#007BFF"
+                            TextColor="White"
+                            FontSize="14"
+                            CornerRadius="8"
+                            WidthRequest="80"
+                            HeightRequest="45"
+                            Clicked="OnCategoryFilterClicked"/>
+                </Grid>
+
+                <!-- Category Filter Dropdown (Initially Hidden) -->
+                <Frame x:Name="CategoryFilterLayout" 
+                       IsVisible="False"
+                       BackgroundColor="White"
+                       CornerRadius="8"
+                       HasShadow="True"
+                       Padding="0">
+
+                    <CollectionView x:Name="CategoriesCollectionView"
+                                    ItemsSource="{Binding Categories}"
+                                    HeightRequest="200">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="15,10">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnCategorySelected" 
+                                                              CommandParameter="{Binding .}"/>
+                                    </Grid.GestureRecognizers>
+
+                                    <Label Text="{Binding CategoriesName}" 
+                                           FontSize="14" 
+                                           TextColor="#333"
+                                           VerticalOptions="Center"/>
+
+                                    <!-- Selection Indicator -->
+                                    <Label Text="✓" 
+                                           FontSize="16" 
+                                           TextColor="#28A745"
+                                           HorizontalOptions="End"
+                                           VerticalOptions="Center"
+                                           IsVisible="{Binding IsSelected}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Frame>
+
+                <!-- Items Collection View -->
+                <CollectionView x:Name="ItemsCollectionView"
+                                ItemsSource="{Binding Items}"
+                                VerticalScrollBarVisibility="Never"
+                                RemainingItemsThreshold="2"
+                                RemainingItemsThresholdReached="OnLoadMoreItems">
+
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical" 
+                                         Span="2" 
+                                         HorizontalItemSpacing="10" 
+                                         VerticalItemSpacing="15"/>
+                    </CollectionView.ItemsLayout>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame BackgroundColor="White" 
+                                   CornerRadius="12" 
+                                   Padding="0" 
+                                   HasShadow="True"
+                                   HeightRequest="280">
+
+                                <StackLayout Spacing="8">
+
+                                    <!-- Scrollable Image Section -->
+                                    <CarouselView ItemsSource="{Binding Images}" 
+                                                  HeightRequest="150"
+                                                  IndicatorView="indicatorView">
+                                        <CarouselView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Frame CornerRadius="8" Padding="0" HasShadow="False">
+                                                    <Image Source="{Binding .}" 
+                                                           Aspect="AspectFill"
+                                                           HeightRequest="150"
+                                                           BackgroundColor="#F0F0F0"/>
+                                                </Frame>
+                                            </DataTemplate>
+                                        </CarouselView.ItemTemplate>
+                                    </CarouselView>
+
+                                    <!-- Image Indicators -->
+                                    <IndicatorView x:Name="indicatorView"
+                                                   IndicatorColor="LightGray"
+                                                   SelectedIndicatorColor="#007BFF"
+                                                   HorizontalOptions="Center"
+                                                   HeightRequest="20"/>
+
+                                    <!-- Item Details -->
+                                    <StackLayout Padding="12,0,12,12" Spacing="4">
+
+                                        <!-- Company Name -->
+                                        <Label Text="{Binding CompanyName}" 
+                                               FontSize="12" 
+                                               FontAttributes="Bold" 
+                                               TextColor="#007BFF"
+                                               LineBreakMode="TailTruncation"/>
+
+                                        <!-- Item Name -->
+                                        <Label Text="{Binding ItemName}" 
+                                               FontSize="14" 
+                                               FontAttributes="Bold" 
+                                               TextColor="Black"
+                                               LineBreakMode="TailTruncation"/>
+
+                                        <!-- Location -->
+                                        <StackLayout Orientation="Horizontal" Spacing="4">
+                                            <Label Text="📍" FontSize="12"/>
+                                            <Label Text="Noida" 
+                                                   FontSize="12" 
+                                                   TextColor="#666"
+                                                   LineBreakMode="TailTruncation"/>
+                                        </StackLayout>
+
+                                        <!-- Price -->
+                                        <Label Text="{Binding ItemCost}" 
+                                               FontSize="14" 
+                                               FontAttributes="Bold" 
+                                               TextColor="#28A745"
+                                               HorizontalOptions="End"/>
+                                    </StackLayout>
+                                </StackLayout>
+
+                                <!-- Tap Gesture -->
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnItemTapped" 
+                                                          CommandParameter="{Binding .}"/>
+                                </Frame.GestureRecognizers>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Add some bottom margin for the footer -->
+                <!--<BoxView HeightRequest="80" Color="Transparent"/>-->
+
+            </StackLayout>
+        </ScrollView>
+
+        <!-- Footer Menu -->
+        <Frame Grid.Row="1" 
+               BackgroundColor="White" 
+               CornerRadius="0" 
+               Padding="0" 
+               HasShadow="True">
+
+            <Grid ColumnDefinitions="*,*,*,*,*" 
+                  HeightRequest="70" 
+                  BackgroundColor="White">
+
+                <!-- Home Button -->
+                <StackLayout Grid.Column="0" 
+                             Spacing="2"
+                             VerticalOptions="Center">
+                    <StackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnHomeClicked"/>
+                    </StackLayout.GestureRecognizers>
+
+                    <Label Text="🏠" 
+                           FontSize="24" 
+                           HorizontalOptions="Center" 
+                           TextColor="#007BFF"/>
+                    <Label Text="Home" 
+                           FontSize="10" 
+                           HorizontalOptions="Center" 
+                           TextColor="#666"
+                           FontAttributes="Bold"/>
+                </StackLayout>
+
+                <!-- Search Button -->
+                <StackLayout Grid.Column="1" 
+                             Spacing="2"
+                             VerticalOptions="Center">
+                    <StackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSearchClicked"/>
+                    </StackLayout.GestureRecognizers>
+
+                    <Label Text="🔍" 
+                           FontSize="24" 
+                           HorizontalOptions="Center" 
+                           TextColor="#666"/>
+                    <Label Text="Search" 
+                           FontSize="10" 
+                           HorizontalOptions="Center" 
+                           TextColor="#666"
+                           FontAttributes="Bold"/>
+                </StackLayout>
+
+                <!-- Add Item Button (Center/Plus Button) -->
+                <StackLayout Grid.Column="2" 
+                             Spacing="2"
+                             VerticalOptions="Center">
+                   
+
+                    <Frame BackgroundColor="#FF6B35" 
+                           CornerRadius="25" 
+                           WidthRequest="50" 
+                           HeightRequest="50" 
+                           Padding="0"
+                           HorizontalOptions="Center"
+                           HasShadow="True">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAddItemClicked"/>
+                        </Frame.GestureRecognizers>
+                        <Label Text="+" 
+                               FontSize="28" 
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center" 
+                               VerticalOptions="Center"
+                               TextColor="White"/>
+                    </Frame>
+                </StackLayout>
+
+                <!-- Orders/Bookings Button -->
+                <!--<StackLayout Grid.Column="3" 
+                             Spacing="2"
+                             VerticalOptions="Center">
+                    <StackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnOrdersClicked"/>
+                    </StackLayout.GestureRecognizers>
+
+                    <Label Text="📋" 
+                           FontSize="24" 
+                           HorizontalOptions="Center" 
+                           TextColor="#666"/>
+                    <Label Text="Orders" 
+                           FontSize="10" 
+                           HorizontalOptions="Center" 
+                           TextColor="#666"
+                           FontAttributes="Bold"/>
+                </StackLayout>-->
+
+                <!-- Profile Button -->
+                <StackLayout Grid.Column="4" 
+                             Spacing="2"
+                             VerticalOptions="Center">
+                    <StackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnProfileClicked"/>
+                    </StackLayout.GestureRecognizers>
+
+                    <Label Text="👤" 
+                           FontSize="24" 
+                           HorizontalOptions="Center" 
+                           TextColor="#666"/>
+                    <Label Text="Profile" 
+                           FontSize="10" 
+                           HorizontalOptions="Center" 
+                           TextColor="#666"
+                           FontAttributes="Bold"/>
+                </StackLayout>
+
+            </Grid>
+        </Frame>
+
+    </Grid>
+</ContentPage>

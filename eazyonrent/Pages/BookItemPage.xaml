@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="eazyonrent.Pages.BookItemPage"
+             Title="Book Item"
+             BackgroundColor="{DynamicResource PageBackgroundColor}">
+    <Grid>
+        <ScrollView>
+            <Grid Padding="20" RowSpacing="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+
+                <!-- Main Form -->
+                <Frame Grid.Row="1" 
+                   BackgroundColor="White" 
+                   CornerRadius="15" 
+                   Padding="20" 
+                   HasShadow="True"
+                   Margin="0,10">
+
+                    <StackLayout Spacing="20">
+
+                        <!-- Rating Section -->
+                        <StackLayout>
+                            <Label Text="Rating" 
+                               FontSize="16" 
+                               FontAttributes="Bold" 
+                               TextColor="{DynamicResource Primary}"/>
+
+                            <Frame BackgroundColor="{DynamicResource Gray100}" 
+                               CornerRadius="10" 
+                               Padding="15"
+                               HasShadow="False">
+                                <StackLayout Orientation="Horizontal" Spacing="10">
+                                    <Label Text="Rate this item:" VerticalOptions="Center"/>
+                                    <StackLayout Orientation="Horizontal" x:Name="StarRatingStack">
+                                        <Button x:Name="Star1" Text="⭐" 
+                                            BackgroundColor="Transparent" 
+                                            TextColor="Gray" 
+                                            FontSize="24"
+                                            Padding="5"
+                                            Clicked="OnStarClicked"/>
+                                        <Button x:Name="Star2" Text="⭐" 
+                                            BackgroundColor="Transparent" 
+                                            TextColor="Gray" 
+                                            FontSize="24"
+                                            Padding="5"
+                                            Clicked="OnStarClicked"/>
+                                        <Button x:Name="Star3" Text="⭐" 
+                                            BackgroundColor="Transparent" 
+                                            TextColor="Gray" 
+                                            FontSize="24"
+                                            Padding="5"
+                                            Clicked="OnStarClicked"/>
+                                        <Button x:Name="Star4" Text="⭐" 
+                                            BackgroundColor="Transparent" 
+                                            TextColor="Gray" 
+                                            FontSize="24"
+                                            Padding="5"
+                                            Clicked="OnStarClicked"/>
+                                        <Button x:Name="Star5" Text="⭐" 
+                                            BackgroundColor="Transparent" 
+                                            TextColor="Gray" 
+                                            FontSize="24"
+                                            Padding="5"
+                                            Clicked="OnStarClicked"/>
+                                    </StackLayout>
+                                </StackLayout>
+                            </Frame>
+                        </StackLayout>
+
+                        <!-- Review Section -->
+                        <StackLayout>
+                            <Label Text="Review" 
+                               FontSize="16" 
+                               FontAttributes="Bold" 
+                               TextColor="{DynamicResource Primary}"/>
+
+                            <Frame BackgroundColor="{DynamicResource Gray100}" 
+                               CornerRadius="10" 
+                               HasShadow="False">
+                                <Editor x:Name="ReviewEditor"
+                                    Placeholder="Write your review here..."
+                                    HeightRequest="100"
+                                    BackgroundColor="Transparent"
+                                    TextColor="Black"/>
+                            </Frame>
+                        </StackLayout>
+
+                        <!-- Rent From Date -->
+                        <StackLayout>
+                            <Label Text="Rent From" 
+                               FontSize="16" 
+                               FontAttributes="Bold" 
+                               TextColor="{DynamicResource Primary}"/>
+
+                            <Frame BackgroundColor="{DynamicResource Gray100}" 
+                               CornerRadius="10" 
+                               Padding="10"
+                               HasShadow="False">
+                                <DatePicker x:Name="RentFromDatePicker"
+                                        Format="dd-MMM-yyyy"
+                                        BackgroundColor="Transparent"
+                                        TextColor="Black"/>
+                            </Frame>
+                        </StackLayout>
+
+                        <!-- Rent To Date -->
+                        <StackLayout>
+                            <Label Text="Rent To" 
+                               FontSize="16" 
+                               FontAttributes="Bold" 
+                               TextColor="{DynamicResource Primary}"/>
+
+                            <Frame BackgroundColor="{DynamicResource Gray100}" 
+                               CornerRadius="10" 
+                               Padding="10"
+                               HasShadow="False">
+                                <DatePicker x:Name="RentToDatePicker"
+                                        Format="dd-MMM-yyyy"
+                                        BackgroundColor="Transparent"
+                                        TextColor="Black"/>
+                            </Frame>
+                        </StackLayout>
+
+                        <!-- Status Toggle -->
+                        <StackLayout>
+                            <Label Text="Status" 
+                               FontSize="16" 
+                               FontAttributes="Bold" 
+                               TextColor="{DynamicResource Primary}"/>
+
+                            <Frame BackgroundColor="{DynamicResource Gray100}" 
+                               CornerRadius="10" 
+                               Padding="15"
+                               HasShadow="False">
+                                <StackLayout Orientation="Horizontal">
+                                    <Switch x:Name="StatusSwitch" 
+                                        IsToggled="True"
+                                        OnColor="{DynamicResource Primary}"
+                                        ThumbColor="White"/>
+                                    <Label Text="Active Booking" 
+                                       VerticalOptions="Center" 
+                                       Margin="10,0,0,0"/>
+                                </StackLayout>
+                            </Frame>
+                        </StackLayout>
+
+                    </StackLayout>
+                </Frame>
+
+                <!-- Bottom Buttons -->
+                <StackLayout Grid.Row="2" Spacing="15">
+
+                    <!-- Book Now Button -->
+                    <Button x:Name="BookNowButton"
+                        Text="FINAL BOOKING" 
+                        FontSize="18"
+                        FontAttributes="Bold"
+                        BackgroundColor="{DynamicResource Primary}"
+                        TextColor="White"
+                        CornerRadius="25"
+                        HeightRequest="50"
+                        Clicked="OnFinalBookClicked">
+                        <Button.Shadow>
+                            <Shadow Brush="{DynamicResource Primary}" 
+                                Offset="0,4" 
+                                Radius="10" 
+                                Opacity="0.3"/>
+                        </Button.Shadow>
+                    </Button>
+
+                    <!-- Cancel Button -->
+                    <Button Text="CANCEL" 
+                        FontSize="16"
+                        BackgroundColor="Transparent"
+                        TextColor="{DynamicResource Gray600}"
+                        BorderColor="{DynamicResource Gray300}"
+                        BorderWidth="1"
+                        CornerRadius="25"
+                        HeightRequest="45"
+                        Clicked="OnCancelClicked"/>
+
+                </StackLayout>
+
+            </Grid>
+        </ScrollView>
+
+        <!-- Loading Overlay -->
+        <Grid x:Name="LoadingOverlay" 
+          BackgroundColor="#80000000" 
+          IsVisible="False">
+            <Frame BackgroundColor="White" 
+               CornerRadius="15" 
+               Padding="30"
+               HorizontalOptions="Center"
+               VerticalOptions="Center">
+                <StackLayout Spacing="15">
+                    <ActivityIndicator IsRunning="True" 
+                                   Color="{DynamicResource Primary}"
+                                   HeightRequest="40"
+                                   WidthRequest="40"/>
+                    <Label Text="Processing your booking..." 
+                       HorizontalOptions="Center"
+                       FontSize="16"/>
+                </StackLayout>
+            </Frame>
+        </Grid>
+    </Grid>
+
+</ContentPage>

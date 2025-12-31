@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            x:Class="eazyonrent.Pages.UserProfilePage"
+            Title="User Profile"
+            BarBackgroundColor="#4a6fc7"
+            BarTextColor="White">
+
+    <TabbedPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="#333333" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="Margin" Value="0,10,0,5" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style TargetType="Entry">
+                <Setter Property="TextColor" Value="#333333" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="PlaceholderColor" Value="#999999" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="HeightRequest" Value="50" />
+                <Setter Property="Margin" Value="0,0,0,15" />
+            </Style>
+
+            <Style TargetType="Editor">
+                <Setter Property="TextColor" Value="#333333" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="PlaceholderColor" Value="#999999" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="HeightRequest" Value="100" />
+                <Setter Property="Margin" Value="0,0,0,15" />
+            </Style>
+
+            <Style TargetType="Button">
+                <Setter Property="BackgroundColor" Value="#4a6fc7" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="HeightRequest" Value="50" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="Margin" Value="0,20,0,0" />
+            </Style>
+        </ResourceDictionary>
+    </TabbedPage.Resources>
+
+    <!-- Profile Tab -->
+    <ContentPage Title="Profile" IconImageSource="user_profile.png">
+        <ScrollView>
+            <Grid Padding="20" RowSpacing="0" ColumnSpacing="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Profile Image with Upload Button -->
+                <Frame Grid.Row="0" Grid.ColumnSpan="2" 
+                       HeightRequest="120" 
+                       WidthRequest="120" 
+                       HorizontalOptions="Center" 
+                       CornerRadius="60" 
+                       Padding="0"
+                       Margin="0,0,0,20"
+                       HasShadow="True">
+                    <Image x:Name="ProfileImage" 
+                           Source="logo.jpeg" 
+                           Aspect="AspectFill" 
+                           HeightRequest="120" 
+                           WidthRequest="120"/>
+                </Frame>
+
+                <!-- Image Upload Button -->
+                <Button Grid.Row="1" Grid.ColumnSpan="2" 
+                        Text="Upload Profile" 
+                        Clicked="OnUploadImageClicked"
+                        HorizontalOptions="Center"
+                        WidthRequest="135"
+                        Margin="0,0,0,5"/>
+
+                <!-- Name -->
+                <Label Grid.Row="2" Grid.Column="0" Text="Name"/>
+                <Entry Grid.Row="3" Grid.Column="0" Placeholder="Enter Name" x:Name="NameEntry"/>
+
+                <!-- Email -->
+                <Label Grid.Row="2" Grid.Column="1" Text="Email"/>
+                <Entry Grid.Row="3" Grid.Column="1" Placeholder="Enter Email" Keyboard="Email" x:Name="EmailEntry"/>
+
+                <!-- Mobile -->
+                <Label Grid.Row="4" Grid.Column="0" Text="Mobile"/>
+                <Entry Grid.Row="5" Grid.Column="0" Placeholder="Enter Mobile" Keyboard="Telephone"  x:Name="MobileEntry" IsReadOnly="True"/>
+
+                <!-- Company Name -->
+                <Label Grid.Row="4" Grid.Column="1" Text="Company Name"/>
+                <Entry Grid.Row="5" Grid.Column="1" Placeholder="Enter Company Name"  x:Name="CompanyEntry"/>
+
+                <!-- Address -->
+                <Label Grid.Row="6" Grid.ColumnSpan="2" Text="Address"/>
+                <Entry Grid.Row="7" Grid.ColumnSpan="2" Placeholder="Enter Address" x:Name="AddressEditor"/>
+
+                <!-- City -->
+                <Label Grid.Row="8" Grid.Column="0" Text="City"/>
+                <Entry Grid.Row="9" Grid.Column="0" Placeholder="Enter City" x:Name="CityEntry"/>
+
+                <!-- Save Button -->
+                <Button Grid.Row="9" Grid.Column="1" Text="Save Profile" Clicked="OnSaveProfileData"/>
+            </Grid>
+        </ScrollView>
+    </ContentPage>
+
+    <!-- Item Tab -->
+    <!-- Item Tab -->
+    <ContentPage Title="Item" IconImageSource="items.png">
+        <ScrollView Padding="15">
+            <CollectionView x:Name="MyCollectionView"
+                    ItemsSource="{Binding ItemList}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Margin="0,0,0,12"
+                       Padding="15"
+                       BackgroundColor="White"
+                       HasShadow="True"
+                       CornerRadius="12"
+                       HeightRequest="160">
+
+                            <Grid ColumnSpacing="15" VerticalOptions="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Image Carousel -->
+                                <Frame Grid.Column="0"
+                               Padding="0"
+                               CornerRadius="8"
+                               HasShadow="False"
+                               HeightRequest="110"
+                               WidthRequest="120"
+                               BackgroundColor="#f5f5f5"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center">
+
+                                    <Grid>
+                                        <CarouselView ItemsSource="{Binding ItemImageList}"
+                                                  HeightRequest="110"
+                                                  WidthRequest="120"
+                                                  Loop="True"
+                                                  PeekAreaInsets="0">
+                                            <CarouselView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Image Source="{Binding ImageName}"
+                                                       Aspect="AspectFill"
+                                                       WidthRequest="120"
+                                                       HeightRequest="110"/>
+                                                </DataTemplate>
+                                            </CarouselView.ItemTemplate>
+                                        </CarouselView>
+
+                                        <!-- Image Indicator -->
+                                        <IndicatorView IndicatorColor="LightGray"
+                                                   SelectedIndicatorColor="#4a6fc7"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="End"
+                                                   Margin="0,0,0,10"
+                                                   IndicatorSize="6"
+                                                   ItemsSource="{Binding ItemImageList}"/>
+                                    </Grid>
+                                </Frame>
+
+                                <!-- Item Details -->
+                                <StackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center" Margin="10,0,0,0">
+                                    <Label Text="{Binding ItemName}"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       TextColor="#328ea8"
+                                       LineBreakMode="TailTruncation"/>
+
+                                    <!--<Label Text="{Binding CompanyName}"
+                                       FontSize="13"
+                                       TextColor="#32a852"
+                                       LineBreakMode="TailTruncation"/>-->
+
+                                    <Label Text="{Binding ItemDescriptions}"
+                                       FontSize="12"
+                                       TextColor="#888"
+                                       LineBreakMode="TailTruncation"
+                                       MaxLines="1"/>
+
+
+                                </StackLayout>
+                            </Grid>
+
+                            <!-- Tap Gesture -->
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                Tapped="OnItemTapped"
+                                CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView>
+    </ContentPage>
+
+    <!-- History Tab -->
+    <!-- History Tab -->
+    <ContentPage Title="History" IconImageSource="history.png">
+        <Grid Padding="15">
+            <!-- No History Message -->
+            <Label x:Name="NoHistoryLabel"
+               Text="No Booking History Available"
+               FontSize="18"
+               TextColor="#999"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               IsVisible="False"/>
+
+            <!-- History Collection View -->
+            <ScrollView>
+                <CollectionView x:Name="HistoryCollectionView">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame Margin="0,0,0,12"
+                               Padding="15"
+                               BackgroundColor="White"
+                               HasShadow="True"
+                               CornerRadius="12"
+                               HeightRequest="175">
+
+                                <Grid ColumnSpacing="15" VerticalOptions="Center">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="120"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Image Carousel -->
+                                    <Frame Grid.Row="0" 
+                                       Grid.Column="0"
+                                       Padding="0"
+                                       CornerRadius="8"
+                                       HasShadow="False"
+                                       HeightRequest="110"
+                                       WidthRequest="120"
+                                       BackgroundColor="#f5f5f5"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center">
+
+                                        <Grid>
+                                            <CarouselView ItemsSource="{Binding ItemImages}"
+                                                      IndicatorView="historyIndicatorView"
+                                                      HeightRequest="110"
+                                                      WidthRequest="120"
+                                                      Loop="True"
+                                                      PeekAreaInsets="0">
+                                                <CarouselView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Image Source="{Binding .}"
+                                                           Aspect="AspectFill"
+                                                           WidthRequest="120"
+                                                           HeightRequest="110"/>
+                                                    </DataTemplate>
+                                                </CarouselView.ItemTemplate>
+                                            </CarouselView>
+
+                                            <!-- Image Indicator - Only show if there are images -->
+                                            <IndicatorView x:Name="historyIndicatorView"
+                                                       Grid.Row="0"
+                                                       Grid.Column="0"
+                                                       IndicatorColor="LightGray"
+                                                       SelectedIndicatorColor="#4a6fc7"
+                                                       HorizontalOptions="Center"
+                                                       VerticalOptions="End"
+                                                       Margin="0,0,0,10"
+                                                       IndicatorSize="6"
+                                                       IsVisible="{Binding ItemImages.Count, Converter={StaticResource CountToVisibilityConverter}}"/>
+                                        </Grid>
+                                    </Frame>
+
+                                    <!-- Item Details -->
+                                    <StackLayout Grid.Row="0" 
+                                             Grid.Column="1" 
+                                             Spacing="6" 
+                                             VerticalOptions="Center" 
+                                             Margin="5,-10,0,0">
+
+                                       
+
+                                        <Label Text="{Binding ItemName}"
+                                           FontSize="13"
+                                           TextColor="#666"
+                                           LineBreakMode="TailTruncation"
+                                           IsVisible="{Binding ItemName}"/>
+                                        <Label Text="{Binding CompanyName}"
+                                                FontSize="16"
+                                                FontAttributes="Bold"
+                                                TextColor="#328ea8"
+                                                LineBreakMode="TailTruncation"/>
+                                        <!-- Rating Stars -->
+                                        <StackLayout Orientation="Horizontal" Spacing="2" IsVisible="{Binding Rating}">
+                                            <Label Text="{Binding Rating, StringFormat='{0:0.0}'}"
+                                               FontSize="11"
+                                               TextColor="#FF9800"
+                                               VerticalTextAlignment="Center"/>
+                                            <Label Text="★"
+                                               FontSize="12"
+                                               TextColor="#FF9800"
+                                               VerticalTextAlignment="Center"/>
+                                            <Label Text="{Binding Review}"
+                                               FontSize="11"
+                                               TextColor="#666"
+                                               VerticalTextAlignment="Center"
+                                               LineBreakMode="TailTruncation"
+                                               MaxLines="1"/>
+                                        </StackLayout>
+
+                                        <!-- Status Badge -->
+                                        <Frame Padding="8,4"
+                                           BackgroundColor="{Binding StatusColor}"
+                                           CornerRadius="4"
+                                           HasShadow="False"
+                                           HorizontalOptions="Start">
+                                            <Label Text="{Binding StatusText}"
+                                               TextColor="White"
+                                               FontSize="11"
+                                               FontAttributes="Bold"/>
+                                        </Frame>
+
+                                        <Label Text="{Binding DateRange}"
+                                           FontSize="12"
+                                           TextColor="#888"
+                                           LineBreakMode="WordWrap"
+                                           MaxLines="2"/>
+                                    </StackLayout>
+
+                                    <!-- Booking ID -->
+                                    <Label Grid.Row="1" 
+                                       Grid.ColumnSpan="2"
+                                       Text="{Binding RenterItemId, StringFormat='Booking ID: #{0}'}"
+                                       FontSize="11"
+                                       TextColor="#999"
+                                       Margin="0,8,0,0"
+                                       HorizontalOptions="Start"/>
+                                </Grid>
+
+                                <!-- Tap Gesture -->
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer 
+                                    Tapped="OnHistoryItemTapped"
+                                    CommandParameter="{Binding .}"/>
+                                </Frame.GestureRecognizers>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </ScrollView>
+        </Grid>
+    </ContentPage>
+</TabbedPage>

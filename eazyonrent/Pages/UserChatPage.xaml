@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="eazyonrent.Pages.UserChatPage"
+             xmlns:local="clr-namespace:eazyonrent.Pages"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="#F5F5F5">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <!-- Sent Message Template (Right side - Blue) -->
+            <DataTemplate x:Key="SentMessageTemplate">
+                <Grid Padding="10,5,15,5" ColumnDefinitions="*,Auto">
+                    <Frame Grid.Column="1" 
+                           BackgroundColor="#4A8FFF"
+                           CornerRadius="18"
+                           Padding="12,8"
+                           HasShadow="False"
+                           Margin="0">
+                        <StackLayout Spacing="3">
+                            <Label Text="{Binding Message}" 
+                                   TextColor="White"
+                                   FontSize="14"
+                                   LineBreakMode="WordWrap"
+                                   FontFamily="Roboto"
+                                   MaximumWidthRequest="310"/>
+                            <StackLayout Orientation="Horizontal" 
+                                        Spacing="4"
+                                        HorizontalOptions="End">
+                                <Label Text="{Binding SentAt, StringFormat='{0:HH:mm}'}" 
+                                       TextColor="White"
+                                       FontSize="11"
+                                       Opacity="0.7"
+                                       FontFamily="Roboto"/>
+                                <!-- Status Icons -->
+                                <Label Text="✓✓" 
+                                       TextColor="#FFD700"
+                                       FontSize="11"
+                                       IsVisible="{Binding IsRead}"
+                                       FontAttributes="Bold"
+                                       FontFamily="Roboto"/>
+                                <Label Text="✓✓" 
+                                       TextColor="White"
+                                       FontSize="11"
+                                       IsVisible="{Binding IsDelivered}"
+                                       Opacity="0.7"
+                                       FontFamily="Roboto"/>
+                                <Label Text="✓" 
+                                       TextColor="White"
+                                       FontSize="11"
+                                       IsVisible="{Binding IsSent}"
+                                       Opacity="0.7"
+                                       FontFamily="Roboto"/>
+                            </StackLayout>
+                        </StackLayout>
+                    </Frame>
+                </Grid>
+            </DataTemplate>
+
+            <!-- Received Message Template (Left side - White) -->
+            <DataTemplate x:Key="ReceivedMessageTemplate">
+                <Grid Padding="15,5,10,5" ColumnDefinitions="Auto,*">
+                    <!-- Avatar -->
+                    <Frame Grid.Column="0"
+                           WidthRequest="32"
+                           HeightRequest="32"
+                           CornerRadius="16"
+                           Padding="0"
+                           HasShadow="False"
+                           BackgroundColor="#E3F2FD"
+                           VerticalOptions="Start"
+                           Margin="0,2,8,0">
+                        <Label Text="👤"
+                               FontSize="16"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Frame>
+
+                    <Frame Grid.Column="1" 
+                           BackgroundColor="White"
+                           CornerRadius="18"
+                           Padding="12,8"
+                           HasShadow="False"
+                           Margin="0"
+                           HorizontalOptions="Start">
+                        <StackLayout Spacing="3">
+                            <Label Text="{Binding Message}" 
+                                   TextColor="#333333"
+                                   FontSize="14"
+                                   LineBreakMode="WordWrap"
+                                   FontFamily="Roboto"/>
+                            <Label Text="{Binding SentAt, StringFormat='{0:HH:mm}'}" 
+                                   TextColor="#999999"
+                                   FontSize="11"
+                                   HorizontalOptions="End"
+                                   FontFamily="Roboto"/>
+                        </StackLayout>
+                    </Frame>
+                </Grid>
+            </DataTemplate>
+
+            <!-- Typing Indicator Template -->
+            <DataTemplate x:Key="TypingTemplate">
+                <Grid Padding="15,5,10,5" ColumnDefinitions="Auto,*">
+                    <Frame Grid.Column="0"
+                           WidthRequest="32"
+                           HeightRequest="32"
+                           CornerRadius="16"
+                           Padding="0"
+                           HasShadow="False"
+                           BackgroundColor="#E3F2FD"
+                           VerticalOptions="Start"
+                           Margin="0,2,8,0">
+                        <Label Text="👤"
+                               FontSize="16"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Frame>
+
+                    <Frame Grid.Column="1" 
+                           BackgroundColor="White"
+                           CornerRadius="18"
+                           Padding="14,10"
+                           HasShadow="False"
+                           HorizontalOptions="Start">
+                        <Label Text="..." 
+                               TextColor="#999999"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               FontFamily="Roboto"/>
+                    </Frame>
+                </Grid>
+            </DataTemplate>
+
+            <local:ChatMessageTemplateSelector x:Key="MessageTemplateSelector"
+                SentMessageTemplate="{StaticResource SentMessageTemplate}"
+                ReceivedMessageTemplate="{StaticResource ReceivedMessageTemplate}"
+                TypingTemplate="{StaticResource TypingTemplate}"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*,Auto" BackgroundColor="#F5F5F5">
+
+        <!-- Header -->
+        <Grid Grid.Row="0" 
+              BackgroundColor="White" 
+              Padding="12,10"
+              ColumnDefinitions="40,*,40"
+              ColumnSpacing="10">
+
+            <BoxView Grid.Row="0" Grid.ColumnSpan="3" 
+                     BackgroundColor="#E8E8E8" 
+                     HeightRequest="1" 
+                     VerticalOptions="End"/>
+
+            <Button Grid.Column="0"
+                    Text="←"
+                    FontSize="24"
+                    TextColor="#333333"
+                    BackgroundColor="Transparent"
+                    Clicked="OnBackClicked"
+                    Padding="0"
+                    BorderWidth="0"/>
+
+            <StackLayout Grid.Column="1" 
+                        Orientation="Horizontal" 
+                        Spacing="8"
+                        HorizontalOptions="Start"
+                        VerticalOptions="Center">
+                <Frame WidthRequest="12" 
+                       HeightRequest="12"
+                       CornerRadius="6"
+                       Padding="0"
+                       HasShadow="False"
+                       BackgroundColor="#4CAF50"
+                       VerticalOptions="Center"
+                       Margin="0"/>
+                <Label Text="Harrison" 
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="#333333"
+                       VerticalOptions="Center"
+                       FontFamily="Roboto"/>
+            </StackLayout>
+
+            <Button Grid.Column="2"
+                    Text="+"
+                    FontSize="24"
+                    TextColor="#4A8FFF"
+                    BackgroundColor="Transparent"
+                    Padding="0"
+                    BorderWidth="0"/>
+        </Grid>
+
+        <!-- Messages List -->
+        <CollectionView Grid.Row="1" 
+                       x:Name="MessagesCollectionView"
+                       ItemsSource="{Binding Messages}"
+                       ItemTemplate="{StaticResource MessageTemplateSelector}"
+                       VerticalScrollBarVisibility="Never"
+                       SelectionMode="None">
+        </CollectionView>
+
+        <!-- Input Area -->
+        <Grid Grid.Row="2" 
+              BackgroundColor="White" 
+              Padding="12,10"
+              ColumnDefinitions="45,*,45"
+              ColumnSpacing="8">
+
+            <BoxView Grid.Row="2" Grid.ColumnSpan="3" 
+                     BackgroundColor="#E8E8E8" 
+                     HeightRequest="1" 
+                     VerticalOptions="Start"/>
+
+            <!-- Add Button -->
+            <Frame Grid.Column="0"
+                   WidthRequest="45"
+                   HeightRequest="45"
+                   CornerRadius="22.5"
+                   Padding="0"
+                   HasShadow="False"
+                   BackgroundColor="#4A8FFF">
+                <Button Text="+"
+                       FontSize="28"
+                       TextColor="White"
+                       BackgroundColor="Transparent"
+                       Padding="0"
+                       BorderWidth="0"
+                       FontAttributes="Bold"/>
+            </Frame>
+
+            <!-- Message Input -->
+            <Frame Grid.Column="1"
+                   BackgroundColor="#F0F0F0"
+                   CornerRadius="22"
+                   Padding="15,0"
+                   HasShadow="False"
+                   VerticalOptions="Center"
+                   Margin="0">
+                <Entry x:Name="MessageEntry"
+                       Placeholder="Type your message"
+                       PlaceholderColor="#BDBDBD"
+                       TextColor="#333333"
+                       FontSize="14"
+                       BackgroundColor="Transparent"
+                       VerticalOptions="Center"
+                       FontFamily="Roboto"/>
+            </Frame>
+
+            <!-- Send Button -->
+            <Frame Grid.Column="2"
+                   WidthRequest="45"
+                   HeightRequest="45"
+                   CornerRadius="22.5"
+                   Padding="0"
+                   HasShadow="False"
+                   BackgroundColor="#E8F0FE">
+                <Button Text="→"
+                       FontSize="20"
+                       TextColor="#4A8FFF"
+                       Clicked="OnSendClicked"
+                       BackgroundColor="Transparent"
+                       Padding="0"
+                       BorderWidth="0"
+                       FontAttributes="Bold"/>
+            </Frame>
+        </Grid>
+    </Grid>
+</ContentPage>
