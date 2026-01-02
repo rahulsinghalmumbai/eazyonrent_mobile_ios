@@ -1,32 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
-	<key>UIDeviceFamily</key>
-	<array>
-		<integer>1</integer>
-		<integer>2</integer>
-	</array>
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>arm64</string>
-	</array>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>XSAppIconAssets</key>
-	<string>Assets.xcassets/appicon.appiconset</string>
-</dict>
+	<dict>
+
+		<!-- App Basic Info -->
+		<key>CFBundleDisplayName</key>
+		<string>EazyonRent</string>
+
+		<key>CFBundleIdentifier</key>
+		<string>com.ssharads.eazyonrent</string>
+
+		<key>CFBundleShortVersionString</key>
+		<string>1.0</string>
+
+		<key>CFBundleVersion</key>
+		<string>1</string>
+
+		<!-- Device & OS -->
+		<key>LSRequiresIPhoneOS</key>
+		<true/>
+
+		<key>UIDeviceFamily</key>
+		<array>
+			<integer>1</integer>
+			<!-- iPhone -->
+			<integer>2</integer>
+			<!-- iPad -->
+		</array>
+
+		<key>UIRequiredDeviceCapabilities</key>
+		<array>
+			<string>arm64</string>
+		</array>
+
+		<!-- Orientation -->
+		<key>UISupportedInterfaceOrientations</key>
+		<array>
+			<string>UIInterfaceOrientationPortrait</string>
+			<string>UIInterfaceOrientationLandscapeLeft</string>
+			<string>UIInterfaceOrientationLandscapeRight</string>
+		</array>
+
+		<key>UISupportedInterfaceOrientations~ipad</key>
+		<array>
+			<string>UIInterfaceOrientationPortrait</string>
+			<string>UIInterfaceOrientationPortraitUpsideDown</string>
+			<string>UIInterfaceOrientationLandscapeLeft</string>
+			<string>UIInterfaceOrientationLandscapeRight</string>
+		</array>
+
+		<!-- App Icon -->
+		<key>XSAppIconAssets</key>		
+		<string>Assets.xcassets/appicon.appiconset</string>
+
+
+		<!-- Optional: Traditional iOS icon config -->
+		<key>CFBundleIcons</key>
+		<dict>
+			<key>CFBundlePrimaryIcon</key>
+			<dict>
+				<key>CFBundleIconName</key>
+				<string>AppIcon</string>
+			</dict>
+		</dict>
+
+		<!-- Privacy (IMPORTANT FOR APP STORE) -->
+		<key>NSCameraUsageDescription</key>
+		<string>Camera is required to upload item images.</string>
+
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Photo library access is required to select images.</string>
+
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>Location is used to show nearby rental items.</string>
+
+		<key>NSAppTransportSecurity</key>
+		<dict>
+			<key>NSAllowsArbitraryLoads</key>
+			<true/>
+		</dict>
+
+	</dict>
 </plist>

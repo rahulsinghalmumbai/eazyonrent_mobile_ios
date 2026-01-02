@@ -1,18 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+	<!-- ================= BASIC CONFIG ================= -->
 	<PropertyGroup>
-		<!--<TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>-->
 		<TargetFrameworks>net9.0-android;net9.0-ios;net9.0-maccatalyst</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
-		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-		<!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
-
-		<!-- Note for MacCatalyst:
-		The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
-		When specifying both architectures, use the plural <RuntimeIdentifiers> instead of the singular <RuntimeIdentifier>.
-		The Mac App Store will NOT accept apps with ONLY maccatalyst-arm64 indicated;
-		either BOTH runtimes must be indicated or ONLY macatalyst-x64. -->
-		<!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">
+			$(TargetFrameworks);net8.0-windows10.0.19041.0
+		</TargetFrameworks>
 
 		<OutputType>Exe</OutputType>
 		<RootNamespace>eazyonrent</RootNamespace>
@@ -21,42 +14,61 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 
-		<!-- Display name -->
 		<ApplicationTitle>eazyonrent</ApplicationTitle>
+		<ApplicationId>com.ssharads.eazyonrent</ApplicationId>
+		<AssemblyName>eazyonrent</AssemblyName>
 
-		<!-- App Identifier -->
-		<ApplicationId>eazyonrent</ApplicationId>
-
-		<!-- Versions -->
-		<!--<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-		<ApplicationVersion>1</ApplicationVersion>-->
-
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
+		<!-- OS Versions -->
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">12.2</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">13.1</SupportedOSPlatformVersion>
-		<TargetFrameworkVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">v35.0</TargetFrameworkVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+
+		<!-- MacCatalyst -->
+		<RuntimeIdentifiers Condition="'$(TargetFramework)'=='net9.0-maccatalyst'">
+			maccatalyst-arm64;maccatalyst-x64
+		</RuntimeIdentifiers>
 	</PropertyGroup>
-
+	<!-- macOS Catalyst specific configuration for HTTP support -->
+	<PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
+		<MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
+		<UseInterpreter>false</UseInterpreter>
+		<MtouchLink>SdkOnly</MtouchLink>
+		<CodesignEntitlements>Platforms\MacCatalyst\Entitlements.plist</CodesignEntitlements>
+	</PropertyGroup>
+	<!-- ================= RESOURCES ================= -->
+<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
+		<BundleResource Include="Platforms\MacCatalyst\Info.plist" />
+	</ItemGroup>
 	<ItemGroup>
-		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.jpeg" />
-
-		<!-- Splash Screen -->
+		<!-- ANDROID / WINDOWS ICON ONLY -->
+		 <MauiIcon Include="Resources\AppIcon\appicon.png" IsAppIcon="true" /> 
+		<!-- Splash -->
 		<MauiSplashScreen Include="Resources\Splash\splash.jpeg" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
-		<!--<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />-->
 
-		<!-- Custom Fonts -->
+		<!-- Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
 
-		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+		<!-- Raw Assets -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
+
+	<!-- ================= iOS ASSETS (CRITICAL) ================= -->
+<!-- Include macOS specific files -->
+	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
+		<BundleResource Include="Platforms\MacCatalyst\Info.plist" />
+	</ItemGroup>
+	<!-- iOS WILL ONLY LOOK FOR appicon.appiconset -->
+	<ItemGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
+		<BundleResource Include="Platforms\iOS\Assets.xcassets\**\*" />
+	</ItemGroup>
+
+
+	<!-- ================= PACKAGES ================= -->
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
@@ -65,51 +77,69 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <MauiXaml Update="CustomControls\CustomToastControl.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\AddItemPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\BookItemPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\GuesPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\ItemDetails.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\LoginPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\UserChatPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\UserProfilePage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	</ItemGroup>
-	<!-- 🔐 SIGNING SETUP FOR RELEASE APK/AAB -->
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	<!-- ================= XAML ================= -->
 
-		<!-- Versions -->
+	<ItemGroup>
+		<MauiXaml Update="CustomControls\CustomToastControl.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\AddItemPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\BookItemPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\GuesPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\ItemDetails.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\LoginPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\UserChatPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\UserProfilePage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+	</ItemGroup>
+
+	<!-- ================= ANDROID SIGNING ================= -->
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<ApplicationVersion>6</ApplicationVersion>
-		<VersionCode>6</VersionCode>
-		<ApplicationDisplayVersion>1.0.6</ApplicationDisplayVersion>
+		<VersionCode>1</VersionCode>
+		<ApplicationDisplayVersion>1.0.0</ApplicationDisplayVersion>
 
 		<AndroidKeyStore>true</AndroidKeyStore>
 		<AndroidSigningKeyStore>key.keystore</AndroidSigningKeyStore>
 		<AndroidSigningKeyAlias>ReachConnect</AndroidSigningKeyAlias>
 		<AndroidSigningKeyPass>raz#9540</AndroidSigningKeyPass>
 		<AndroidSigningStorePass>raz#9540</AndroidSigningStorePass>
-
-		<!--for setting the key and make bundle
-		keytool -genkey -v -keystore key.keystore -alias ReachConnect -keyalg RSA -keysize 2048 -validity 10000
-		dotnet publish -f net9.0-android -c Release /p:AndroidPackageFormat=aab-->
-
-
-
 	</PropertyGroup>
+
+	<!-- ================= iOS SIGNING ================= -->
+
+	<PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
+		<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+		<CodesignKey>Apple Development: Created via API (MF33LFBC4B)</CodesignKey>
+		<CodesignProvision>eazyonrent</CodesignProvision>
+	
+	<!-- ✅ ADDED: iOS Icon Specific Properties -->
+		<AssetCatalogAppIconName>AppIcon</AssetCatalogAppIconName>
+		<CreatePackage>false</CreatePackage>
+		<GenerateBundle>false</GenerateBundle>
+	</PropertyGroup>
+
+	<!-- ================= MACCATALYST ================= -->
+
+	<PropertyGroup Condition="'$(TargetFramework)'=='net9.0-maccatalyst'">
+		<RuntimeIdentifier>maccatalyst-arm64</RuntimeIdentifier>
+	
+		<!-- ✅ ADDED: MacCatalyst Icon Properties -->
+		<AssetCatalogAppIconName>AppIcon</AssetCatalogAppIconName>
+	</PropertyGroup>
+
 </Project>

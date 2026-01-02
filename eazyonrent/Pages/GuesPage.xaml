@@ -192,17 +192,19 @@
         </ScrollView>
 
         <!-- Footer Menu -->
-        <Frame Grid.Row="1" 
+        <!--<Frame Grid.Row="1" 
                BackgroundColor="White" 
                CornerRadius="0" 
                Padding="0" 
+               VerticalOptions="End"
+               HorizontalOptions="Fill"
                HasShadow="True">
 
             <Grid ColumnDefinitions="*,*,*,*,*" 
                   HeightRequest="70" 
                   BackgroundColor="White">
 
-                <!-- Home Button -->
+                 --><!--Home Button--><!-- 
                 <StackLayout Grid.Column="0" 
                              Spacing="2"
                              VerticalOptions="Center">
@@ -221,7 +223,7 @@
                            FontAttributes="Bold"/>
                 </StackLayout>
 
-                <!-- Search Button -->
+                 --><!--Search Button--><!-- 
                 <StackLayout Grid.Column="1" 
                              Spacing="2"
                              VerticalOptions="Center">
@@ -240,7 +242,7 @@
                            FontAttributes="Bold"/>
                 </StackLayout>
 
-                <!-- Add Item Button (Center/Plus Button) -->
+                 --><!--Add Item Button (Center/Plus Button)--><!-- 
                 <StackLayout Grid.Column="2" 
                              Spacing="2"
                              VerticalOptions="Center">
@@ -265,8 +267,8 @@
                     </Frame>
                 </StackLayout>
 
-                <!-- Orders/Bookings Button -->
-                <!--<StackLayout Grid.Column="3" 
+                 --><!--Orders/Bookings Button--><!-- 
+                <StackLayout Grid.Column="3" 
                              Spacing="2"
                              VerticalOptions="Center">
                     <StackLayout.GestureRecognizers>
@@ -282,9 +284,9 @@
                            HorizontalOptions="Center" 
                            TextColor="#666"
                            FontAttributes="Bold"/>
-                </StackLayout>-->
+                </StackLayout>
 
-                <!-- Profile Button -->
+                 --><!--Profile Button--><!-- 
                 <StackLayout Grid.Column="4" 
                              Spacing="2"
                              VerticalOptions="Center">
@@ -304,7 +306,131 @@
                 </StackLayout>
 
             </Grid>
+        </Frame>-->
+
+
+        <!-- Footer Menu -->
+        <Frame Grid.Row="1"
+       BackgroundColor="White"
+       CornerRadius="0"
+       Padding="0"
+       HasShadow="True"
+       VerticalOptions="End"
+       HorizontalOptions="Fill">
+
+            <Grid ColumnDefinitions="*,*,*,*,*"
+          HeightRequest="70"
+          BackgroundColor="White">
+
+
+                <StackLayout Grid.Column="0" 
+                Spacing="2"
+                VerticalOptions="Center">
+                    <StackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnHomeClicked"/>
+                    </StackLayout.GestureRecognizers>
+
+                    <Label Text="🏠" 
+              FontSize="24" 
+              HorizontalOptions="Center" 
+              TextColor="#007BFF"/>
+                    <Label Text="Home" 
+              FontSize="10" 
+              HorizontalOptions="Center" 
+              TextColor="#666"
+              FontAttributes="Bold"/>
+                </StackLayout>
+
+                <!--Search Button-->
+                <StackLayout Grid.Column="1" 
+                Spacing="2"
+                VerticalOptions="Center">
+                    <StackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSearchClicked"/>
+                    </StackLayout.GestureRecognizers>
+
+                    <Label Text="🔍" 
+              FontSize="24" 
+              HorizontalOptions="Center" 
+              TextColor="#666"/>
+                    <Label Text="Search" 
+              FontSize="10" 
+              HorizontalOptions="Center" 
+              TextColor="#666"
+              FontAttributes="Bold"/>
+                </StackLayout>
+
+                <!--Add Item Button (Center/Plus Button)-->
+                <StackLayout Grid.Column="2" 
+                Spacing="2"
+                VerticalOptions="Center">
+
+
+                    <Frame BackgroundColor="#FF6B35" 
+              CornerRadius="25" 
+              WidthRequest="50" 
+              HeightRequest="50" 
+              Padding="0"
+              HorizontalOptions="Center"
+              HasShadow="True">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAddItemClicked"/>
+                        </Frame.GestureRecognizers>
+                        <Label Text="+" 
+                  FontSize="28" 
+                  FontAttributes="Bold"
+                  HorizontalOptions="Center" 
+                  VerticalOptions="Center"
+                  TextColor="White"/>
+                    </Frame>
+                </StackLayout>
+
+                <!--Orders/Bookings Button-->
+                <!--<StackLayout Grid.Column="3" 
+                Spacing="2"
+                VerticalOptions="Center">
+                    <StackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnOrdersClicked"/>
+                    </StackLayout.GestureRecognizers>
+
+                    <Label Text="📋" 
+              FontSize="24" 
+              HorizontalOptions="Center" 
+              TextColor="#666"/>
+                    <Label Text="Orders" 
+              FontSize="10" 
+              HorizontalOptions="Center" 
+              TextColor="#666"
+              FontAttributes="Bold"/>
+                </StackLayout>-->
+
+                <!--Profile Button-->
+                <StackLayout Grid.Column="4" 
+                Spacing="2"
+                VerticalOptions="Center">
+                    <StackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnProfileClicked"/>
+                    </StackLayout.GestureRecognizers>
+
+                    <Label Text="👤" 
+              FontSize="24" 
+              HorizontalOptions="Center" 
+              TextColor="#666"/>
+                    <Label Text="Profile" 
+              FontSize="10" 
+              HorizontalOptions="Center" 
+              TextColor="#666"
+              FontAttributes="Bold"/>
+                </StackLayout>
+                
+               
+
+                
+                
+                
+            </Grid>
         </Frame>
+
 
     </Grid>
 </ContentPage>
