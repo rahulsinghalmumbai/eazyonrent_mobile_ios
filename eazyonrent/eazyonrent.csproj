@@ -16,6 +16,7 @@
 
 		<ApplicationTitle>eazyonrent</ApplicationTitle>
 		<ApplicationId>com.ssharads.eazyonrent</ApplicationId>
+
 		<AssemblyName>eazyonrent</AssemblyName>
 
 		<!-- OS Versions -->
@@ -30,6 +31,12 @@
 			maccatalyst-arm64;maccatalyst-x64
 		</RuntimeIdentifiers>
 	</PropertyGroup>
+
+	<!-- ================= WINDOWS SAFETY FIX ================= -->
+	<PropertyGroup Condition="$([MSBuild]::IsOSPlatform('windows'))">
+		<EnableIOS>false</EnableIOS>
+	</PropertyGroup>
+
 	<!-- macOS Catalyst specific configuration for HTTP support -->
 	<PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
 		<MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
@@ -37,13 +44,15 @@
 		<MtouchLink>SdkOnly</MtouchLink>
 		<CodesignEntitlements>Platforms\MacCatalyst\Entitlements.plist</CodesignEntitlements>
 	</PropertyGroup>
+
 	<!-- ================= RESOURCES ================= -->
-<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
+	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
 		<BundleResource Include="Platforms\MacCatalyst\Info.plist" />
 	</ItemGroup>
+
 	<ItemGroup>
 		<!-- ANDROID / WINDOWS ICON ONLY -->
-		 <MauiIcon Include="Resources\AppIcon\appicon.png" IsAppIcon="true" /> 
+		<MauiIcon Include="Resources\AppIcon\appicon.png" IsAppIcon="true" />
 		<!-- Splash -->
 		<MauiSplashScreen Include="Resources\Splash\splash.jpeg" />
 
@@ -58,18 +67,15 @@
 	</ItemGroup>
 
 	<!-- ================= iOS ASSETS (CRITICAL) ================= -->
-<!-- Include macOS specific files -->
 	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
 		<BundleResource Include="Platforms\MacCatalyst\Info.plist" />
 	</ItemGroup>
-	<!-- iOS WILL ONLY LOOK FOR appicon.appiconset -->
+
 	<ItemGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
 		<BundleResource Include="Platforms\iOS\Assets.xcassets\**\*" />
 	</ItemGroup>
 
-
 	<!-- ================= PACKAGES ================= -->
-
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
@@ -78,36 +84,20 @@
 	</ItemGroup>
 
 	<!-- ================= XAML ================= -->
-
 	<ItemGroup>
 		<MauiXaml Update="CustomControls\CustomToastControl.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="Pages\AddItemPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Pages\BookItemPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Pages\GuesPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Pages\ItemDetails.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Pages\LoginPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Pages\UserChatPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Pages\UserProfilePage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
+		<MauiXaml Update="Pages\AddItemPage.xaml"><Generator>MSBuild:Compile</Generator></MauiXaml>
+		<MauiXaml Update="Pages\BookItemPage.xaml"><Generator>MSBuild:Compile</Generator></MauiXaml>
+		<MauiXaml Update="Pages\GuesPage.xaml"><Generator>MSBuild:Compile</Generator></MauiXaml>
+		<MauiXaml Update="Pages\ItemDetails.xaml"><Generator>MSBuild:Compile</Generator></MauiXaml>
+		<MauiXaml Update="Pages\LoginPage.xaml"><Generator>MSBuild:Compile</Generator></MauiXaml>
+		<MauiXaml Update="Pages\UserChatPage.xaml"><Generator>MSBuild:Compile</Generator></MauiXaml>
+		<MauiXaml Update="Pages\UserProfilePage.xaml"><Generator>MSBuild:Compile</Generator></MauiXaml>
 	</ItemGroup>
 
 	<!-- ================= ANDROID SIGNING ================= -->
-
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<ApplicationVersion>6</ApplicationVersion>
 		<VersionCode>1</VersionCode>
@@ -121,24 +111,22 @@
 	</PropertyGroup>
 
 	<!-- ================= iOS SIGNING ================= -->
-
 	<PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
 		<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
-		<CodesignKey>Apple Development: Created via API (MF33LFBC4B)</CodesignKey>
-		<CodesignProvision>eazyonrent</CodesignProvision>
-	
-	<!-- ✅ ADDED: iOS Icon Specific Properties -->
-		<AssetCatalogAppIconName>AppIcon</AssetCatalogAppIconName>
-		<CreatePackage>false</CreatePackage>
-		<GenerateBundle>false</GenerateBundle>
+		<CodesignKey>Apple Distribution: Ssharad Mittal (DT8372ZT8Y)</CodesignKey>
+		<CodesignProvision>EazyOnRent</CodesignProvision>
+		<BuildIpa>true</BuildIpa>
 	</PropertyGroup>
 
-	<!-- ================= MACCATALYST ================= -->
+	<!-- ================= iOS SIMULATOR FIX (DO NOT REMOVE) ================= -->
+	<PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
+  <RuntimeIdentifier>iossimulator-arm64</RuntimeIdentifier>
+</PropertyGroup>
 
+
+	<!-- ================= MACCATALYST ================= -->
 	<PropertyGroup Condition="'$(TargetFramework)'=='net9.0-maccatalyst'">
 		<RuntimeIdentifier>maccatalyst-arm64</RuntimeIdentifier>
-	
-		<!-- ✅ ADDED: MacCatalyst Icon Properties -->
 		<AssetCatalogAppIconName>AppIcon</AssetCatalogAppIconName>
 	</PropertyGroup>
 
