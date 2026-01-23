@@ -112,11 +112,12 @@
 
 	<!-- ================= iOS SIGNING ================= -->
 	<PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
-		<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
-		<CodesignKey>Apple Distribution: Ssharad Mittal (DT8372ZT8Y)</CodesignKey>
-		<CodesignProvision>EazyOnRent</CodesignProvision>
-		<BuildIpa>true</BuildIpa>
-	</PropertyGroup>
+    <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+    <ApplicationId>com.ssharads.eazyonrent</ApplicationId>
+    <CodesignKey>iPhone Distribution: Ssharad Mittal (DT8372ZT8Y)</CodesignKey>
+    <CodesignProvision>EazyOnRent</CodesignProvision>
+    <BuildIpa>true</BuildIpa>
+  </PropertyGroup>
 
 	<!-- ================= iOS SIMULATOR FIX (DO NOT REMOVE) ================= -->
 	<PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
