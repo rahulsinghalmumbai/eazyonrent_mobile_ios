@@ -4,7 +4,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">
-			$(TargetFrameworks);net8.0-windows10.0.19041.0
+			net10.0-android;net10.0-windows10.0.19041.0
 		</TargetFrameworks>
 
 		<OutputType>Exe</OutputType>
@@ -112,8 +112,10 @@
 
 	<!-- ================= iOS SIGNING ================= -->
 	<PropertyGroup Condition="'$(TargetFramework)'=='net10.0-ios' AND '$(Configuration)'=='Debug'">
-    <RuntimeIdentifier>iossimulator-arm64</RuntimeIdentifier>
-  </PropertyGroup>
+		<RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
+		<ApplicationId>com.ssharads.eazyonrent</ApplicationId>
+		<MtouchLink>SdkOnly</MtouchLink>
+	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='net10.0-ios' AND '$(Configuration)'=='Release'">
     <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
