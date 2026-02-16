@@ -2,7 +2,7 @@
 
 	<!-- ================= BASIC CONFIG ================= -->
 	<PropertyGroup>
-		<TargetFrameworks>net9.0-android;net9.0-ios;net9.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks>net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">
 			$(TargetFrameworks);net8.0-windows10.0.19041.0
 		</TargetFrameworks>
@@ -20,14 +20,14 @@
 		<AssemblyName>eazyonrent</AssemblyName>
 
 		<!-- OS Versions -->
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">12.2</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">13.1</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 
 		<!-- MacCatalyst -->
-		<RuntimeIdentifiers Condition="'$(TargetFramework)'=='net9.0-maccatalyst'">
+		<RuntimeIdentifiers Condition="'$(TargetFramework)'=='net10.0-maccatalyst'">
 			maccatalyst-arm64;maccatalyst-x64
 		</RuntimeIdentifiers>
 	</PropertyGroup>
@@ -71,7 +71,7 @@
 		<BundleResource Include="Platforms\MacCatalyst\Info.plist" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
+	<ItemGroup Condition="'$(TargetFramework)'=='net10.0-ios'">
 		<BundleResource Include="Platforms\iOS\Assets.xcassets\**\*" />
 	</ItemGroup>
 
@@ -111,22 +111,24 @@
 	</PropertyGroup>
 
 	<!-- ================= iOS SIGNING ================= -->
-	<PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
-    <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
-    <ApplicationId>com.ssharads.eazyonrent</ApplicationId>
-    <CodesignKey>iPhone Distribution: Ssharad Mittal (DT8372ZT8Y)</CodesignKey>
-    <CodesignProvision>EazyOnRent</CodesignProvision>
-    <BuildIpa>true</BuildIpa>
+	<PropertyGroup Condition="'$(TargetFramework)'=='net10.0-ios' AND '$(Configuration)'=='Debug'">
+    <RuntimeIdentifier>iossimulator-arm64</RuntimeIdentifier>
   </PropertyGroup>
 
-	<!-- ================= iOS SIMULATOR FIX (DO NOT REMOVE) ================= -->
-	<PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
-  <RuntimeIdentifier>iossimulator-arm64</RuntimeIdentifier>
-</PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework)'=='net10.0-ios' AND '$(Configuration)'=='Release'">
+    <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+    <ApplicationId>com.ssharads.eazyonrent</ApplicationId>
+    <CodesignKey>Apple Distribution: Ssharad Mittal (DT8372ZT8Y)</CodesignKey>
+    <CodesignProvision>EazyOnRentAppleDist</CodesignProvision>
+    <BuildIpa>true</BuildIpa>
+    <MtouchLink>SdkOnly</MtouchLink>
+    <MtouchUseLlvm>true</MtouchUseLlvm>
+    <IpaPackageName>eazyonrent.ipa</IpaPackageName>
+  </PropertyGroup>
 
 
 	<!-- ================= MACCATALYST ================= -->
-	<PropertyGroup Condition="'$(TargetFramework)'=='net9.0-maccatalyst'">
+	<PropertyGroup Condition="'$(TargetFramework)'=='net10.0-maccatalyst'">
 		<RuntimeIdentifier>maccatalyst-arm64</RuntimeIdentifier>
 		<AssetCatalogAppIconName>AppIcon</AssetCatalogAppIconName>
 	</PropertyGroup>
