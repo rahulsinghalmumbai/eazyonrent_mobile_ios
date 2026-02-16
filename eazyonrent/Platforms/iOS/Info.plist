@@ -50,12 +50,19 @@
 		</array>
 
 		<!-- App Icon -->
-		<key>XSAppIconAssets</key>		
-		<string>Assets.xcassets/appicon.appiconset</string>
+		<key>XSAppIconAssets</key>
+		<string>Assets.xcassets/AppIcon.appiconset</string>
 
-
-		<!-- Optional: Traditional iOS icon config -->
 		<key>CFBundleIcons</key>
+		<dict>
+			<key>CFBundlePrimaryIcon</key>
+			<dict>
+				<key>CFBundleIconName</key>
+				<string>AppIcon</string>
+			</dict>
+		</dict>
+
+		<key>CFBundleIcons~ipad</key>
 		<dict>
 			<key>CFBundlePrimaryIcon</key>
 			<dict>

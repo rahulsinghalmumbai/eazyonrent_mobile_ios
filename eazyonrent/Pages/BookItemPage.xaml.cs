@@ -27,11 +27,11 @@ public partial class BookItemPage : ContentPage
     {
         set => _listerId = int.Parse(value ?? "0");
     }
-    public string ItemName  
+    public string ItemName
     {
         set => _itemName = value;
     }
-    public BookItemPage(int itemId, int listerId, string itemName = null) 
+    public BookItemPage(int itemId, int listerId, string itemName = null)
     {
         InitializeComponent();
         _bookServices = new BookServices();
@@ -65,7 +65,7 @@ public partial class BookItemPage : ContentPage
             Title = $"Book Item #{_itemId}";
         }
 
-       
+
     }
     // Star Rating Event Handler
     private void OnStarClicked(object sender, EventArgs e)
@@ -92,11 +92,11 @@ public partial class BookItemPage : ContentPage
         {
             if (i < _selectedRating)
             {
-                stars[i].TextColor = Color.FromArgb("#FFD700"); 
+                stars[i].TextColor = Color.FromArgb("#FFD700");
             }
             else
             {
-                stars[i].TextColor = Color.FromArgb("#CCCCCC"); 
+                stars[i].TextColor = Color.FromArgb("#CCCCCC");
             }
         }
     }
@@ -107,9 +107,9 @@ public partial class BookItemPage : ContentPage
         // Ensure rent to date is after rent from date
         if (RentToDatePicker.Date <= e.NewDate)
         {
-            RentToDatePicker.Date = e.NewDate.AddDays(1);
+            RentToDatePicker.Date = e.NewDate.Value.AddDays(1);
         }
-        RentToDatePicker.MinimumDate = e.NewDate.AddDays(1);
+        RentToDatePicker.MinimumDate = e.NewDate.Value.AddDays(1);
     }
 
     private async void OnRentToDateSelected(object sender, DateChangedEventArgs e)
@@ -118,7 +118,7 @@ public partial class BookItemPage : ContentPage
         if (e.NewDate <= RentFromDatePicker.Date)
         {
             await DisplayAlert("Invalid Date", "Rent to date must be after rent from date.", "OK");
-            RentToDatePicker.Date = RentFromDatePicker.Date.AddDays(1);
+            RentToDatePicker.Date = RentFromDatePicker.Date.Value.AddDays(1);
         }
     }
 
@@ -157,7 +157,7 @@ public partial class BookItemPage : ContentPage
             // Prepare booking request model
             var renterItem = new RenterItem
             {
-                RenterID = listerId,   
+                RenterID = listerId,
                 ItemId = _itemId,
                 RentFromDate = RentFromDatePicker.Date,
                 RentToDate = RentToDatePicker.Date,
@@ -166,7 +166,7 @@ public partial class BookItemPage : ContentPage
                 Status = true
             };
 
-          
+
             var response = await _bookServices.FinalBooking(renterItem);
 
             if (response != null && response.Data != null)
@@ -195,7 +195,7 @@ public partial class BookItemPage : ContentPage
     {
         // Validate item and lister IDs
         if (_itemId <= 0 || _listerId <= 0)
-        { 
+        {
             await DisplayAlert("Error", "Invalid item or lister information.", "OK");
             return false;
         }
@@ -214,7 +214,7 @@ public partial class BookItemPage : ContentPage
         }
 
         // Check if rental period is reasonable (not more than 365 days)
-        var rentalDays = (RentToDatePicker.Date - RentFromDatePicker.Date).Days;
+        var rentalDays = (RentToDatePicker.Date - RentFromDatePicker.Date).Value.Days;
         if (rentalDays > 365)
         {
             await DisplayAlert("Invalid Period", "Rental period cannot exceed 365 days.", "OK");
@@ -224,7 +224,7 @@ public partial class BookItemPage : ContentPage
         return true;
     }
 
-   
+
 
     private async void OnCancelClicked(object sender, EventArgs e)
     {
