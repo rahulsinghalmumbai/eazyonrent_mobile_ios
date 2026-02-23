@@ -3,17 +3,9 @@
 	<!-- ================= BASIC CONFIG ================= -->
 	<PropertyGroup>
 		<TargetFrameworks>net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
-		<!--<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">
 			net10.0-android;net10.0-windows10.0.19041.0
-		</TargetFrameworks>-->
-		
-		<TargetFrameworks>
-    net10.0-android;
-    net10.0-ios;
-    net10.0-maccatalyst;
-    net10.0-windows10.0.19041.0
-  </TargetFrameworks>
-
+		</TargetFrameworks>
 
 		<OutputType>Exe</OutputType>
 		<RootNamespace>eazyonrent</RootNamespace>
@@ -98,12 +90,9 @@
 		</MauiXaml>
 		<MauiXaml Update="Pages\AddItemPage.xaml"><Generator>MSBuild:Compile</Generator></MauiXaml>
 		<MauiXaml Update="Pages\BookItemPage.xaml"><Generator>MSBuild:Compile</Generator></MauiXaml>
-		<MauiXaml Update="Pages\EditItemPage.xaml">
-		  <Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
 		<MauiXaml Update="Pages\GuesPage.xaml"><Generator>MSBuild:Compile</Generator></MauiXaml>
 		<MauiXaml Update="Pages\ItemDetails.xaml"><Generator>MSBuild:Compile</Generator></MauiXaml>
-		<MauiXaml Update="Pages\LoginPage.Xaml"><Generator>MSBuild:Compile</Generator></MauiXaml>
+		<MauiXaml Update="Pages\LoginPage.xaml"><Generator>MSBuild:Compile</Generator></MauiXaml>
 		<MauiXaml Update="Pages\UserChatPage.xaml"><Generator>MSBuild:Compile</Generator></MauiXaml>
 		<MauiXaml Update="Pages\UserProfilePage.xaml"><Generator>MSBuild:Compile</Generator></MauiXaml>
 	</ItemGroup>
@@ -127,16 +116,9 @@
 		<ApplicationId>com.ssharads.eazyonrent</ApplicationId>
 		<MtouchLink>SdkOnly</MtouchLink>
 	</PropertyGroup>
-<PropertyGroup Condition="'$(TargetFramework)'=='net10.0-ios'">
-  <AssetCatalogAppIconName>appicon</AssetCatalogAppIconName>
-</PropertyGroup>
-	
+
 	<PropertyGroup Condition="'$(TargetFramework)'=='net10.0-ios' AND '$(Configuration)'=='Release'">
     <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
-	  <AssetCatalogAppIconName>appicon</AssetCatalogAppIconName>
-		<ApplicationVersion>2</ApplicationVersion>
-		<VersionCode>2</VersionCode>
-		<ApplicationDisplayVersion>1.0.2</ApplicationDisplayVersion>
     <ApplicationId>com.ssharads.eazyonrent</ApplicationId>
     <CodesignKey>Apple Distribution: Ssharad Mittal (DT8372ZT8Y)</CodesignKey>
     <CodesignProvision>EazyOnRentAppleDist</CodesignProvision>
