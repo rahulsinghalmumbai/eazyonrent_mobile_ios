@@ -20,11 +20,55 @@ namespace eazyonrent.Services
                 Timeout = TimeSpan.FromSeconds(30)
             };
         }
-        public async Task<ApiResponseItem<List<ListerItemResult>>?> GetGuestItemsAsync()
+        //    public async Task<ApiResponseItem<List<ListerItemResult>>?> GetGuestItemsAsync(
+        //int? categoryId,
+        //string companyName,
+        //string itemName)
+        //    {
+        //        try
+        //        {
+        //            var url = $"{Endpoints.GetGuestItem}";
+        //            var response = await _httpClient.GetAsync(url);
+
+        //            if (!response.IsSuccessStatusCode)
+        //                return null;
+
+        //            var jsonContent = await response.Content.ReadAsStringAsync();
+
+        //            var apiResponse = JsonSerializer.Deserialize<ApiResponseItem<List<ListerItemResult>>>(
+        //                jsonContent,
+        //                new JsonSerializerOptions
+        //                {
+        //                    PropertyNameCaseInsensitive = true
+        //                });
+
+        //            return apiResponse;
+        //        }
+        //        catch
+        //        {
+        //            return null;
+        //        }
+        //    }
+
+
+        public async Task<ApiResponseItem<List<ListerItemResult>>?>
+GetGuestItemsAsync(int? categoryId, string? companyName)
         {
             try
             {
-                var url = $"{Endpoints.GetGuestItem}";
+                var url = AppSettings.BaseApiUrl + Endpoints.GetGuestItem;
+
+                List<string> queryParams = new List<string>();
+
+                if (categoryId.HasValue)
+                    queryParams.Add($"categoryId={categoryId.Value}");
+
+                if (!string.IsNullOrWhiteSpace(companyName))
+                    queryParams.Add($"companyName={Uri.EscapeDataString(companyName)}");
+
+                if (queryParams.Count > 0)
+                    url += string.Join("&", queryParams);
+
                 var response = await _httpClient.GetAsync(url);
 
                 if (!response.IsSuccessStatusCode)
@@ -32,13 +76,14 @@ namespace eazyonrent.Services
 
                 var jsonContent = await response.Content.ReadAsStringAsync();
 
-                var apiResponse = JsonSerializer.Deserialize<ApiResponseItem<List<ListerItemResult>>>(
-                    jsonContent,
-                    new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    });
-                
+                var apiResponse =
+                    JsonSerializer.Deserialize<ApiResponseItem<List<ListerItemResult>>>(
+                        jsonContent,
+                        new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        });
+
                 return apiResponse;
             }
             catch

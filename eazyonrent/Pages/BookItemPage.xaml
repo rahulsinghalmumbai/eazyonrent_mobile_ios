@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="eazyonrent.Pages.BookItemPage"
              Title="Book Item"
-             BackgroundColor="{DynamicResource PageBackgroundColor}">
+             BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#1C1C1E}">
     <Grid>
         <ScrollView>
             <Grid Padding="20" RowSpacing="20">
@@ -16,7 +16,7 @@
 
                 <!-- Main Form -->
                 <Frame Grid.Row="1" 
-                   BackgroundColor="White" 
+                   BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}" 
                    CornerRadius="15" 
                    Padding="20" 
                    HasShadow="True"
@@ -31,12 +31,14 @@
                                FontAttributes="Bold" 
                                TextColor="{DynamicResource Primary}"/>
 
-                            <Frame BackgroundColor="{DynamicResource Gray100}" 
+                            <Frame BackgroundColor="{AppThemeBinding Light=#F3F3F3, Dark=#3A3A3C}" 
                                CornerRadius="10" 
                                Padding="15"
                                HasShadow="False">
                                 <StackLayout Orientation="Horizontal" Spacing="10">
-                                    <Label Text="Rate this item:" VerticalOptions="Center"/>
+                                    <Label Text="Rate this item:" 
+                                           VerticalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
                                     <StackLayout Orientation="Horizontal" x:Name="StarRatingStack">
                                         <Button x:Name="Star1" Text="⭐" 
                                             BackgroundColor="Transparent" 
@@ -80,14 +82,15 @@
                                FontAttributes="Bold" 
                                TextColor="{DynamicResource Primary}"/>
 
-                            <Frame BackgroundColor="{DynamicResource Gray100}" 
+                            <Frame BackgroundColor="{AppThemeBinding Light=#F3F3F3, Dark=#3A3A3C}" 
                                CornerRadius="10" 
                                HasShadow="False">
                                 <Editor x:Name="ReviewEditor"
                                     Placeholder="Write your review here..."
+                                    PlaceholderColor="{AppThemeBinding Light=#999999, Dark=#777777}"
                                     HeightRequest="100"
                                     BackgroundColor="Transparent"
-                                    TextColor="Black"/>
+                                    TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
                             </Frame>
                         </StackLayout>
 
@@ -98,14 +101,14 @@
                                FontAttributes="Bold" 
                                TextColor="{DynamicResource Primary}"/>
 
-                            <Frame BackgroundColor="{DynamicResource Gray100}" 
+                            <Frame BackgroundColor="{AppThemeBinding Light=#F3F3F3, Dark=#3A3A3C}" 
                                CornerRadius="10" 
                                Padding="10"
                                HasShadow="False">
                                 <DatePicker x:Name="RentFromDatePicker"
                                         Format="dd-MMM-yyyy"
                                         BackgroundColor="Transparent"
-                                        TextColor="Black"/>
+                                        TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
                             </Frame>
                         </StackLayout>
 
@@ -116,14 +119,14 @@
                                FontAttributes="Bold" 
                                TextColor="{DynamicResource Primary}"/>
 
-                            <Frame BackgroundColor="{DynamicResource Gray100}" 
+                            <Frame BackgroundColor="{AppThemeBinding Light=#F3F3F3, Dark=#3A3A3C}" 
                                CornerRadius="10" 
                                Padding="10"
                                HasShadow="False">
                                 <DatePicker x:Name="RentToDatePicker"
                                         Format="dd-MMM-yyyy"
                                         BackgroundColor="Transparent"
-                                        TextColor="Black"/>
+                                        TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
                             </Frame>
                         </StackLayout>
 
@@ -134,7 +137,7 @@
                                FontAttributes="Bold" 
                                TextColor="{DynamicResource Primary}"/>
 
-                            <Frame BackgroundColor="{DynamicResource Gray100}" 
+                            <Frame BackgroundColor="{AppThemeBinding Light=#F3F3F3, Dark=#3A3A3C}" 
                                CornerRadius="10" 
                                Padding="15"
                                HasShadow="False">
@@ -145,7 +148,8 @@
                                         ThumbColor="White"/>
                                     <Label Text="Active Booking" 
                                        VerticalOptions="Center" 
-                                       Margin="10,0,0,0"/>
+                                       Margin="10,0,0,0"
+                                       TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
                                 </StackLayout>
                             </Frame>
                         </StackLayout>
@@ -194,7 +198,7 @@
         <Grid x:Name="LoadingOverlay" 
           BackgroundColor="#80000000" 
           IsVisible="False">
-            <Frame BackgroundColor="White" 
+            <Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}" 
                CornerRadius="15" 
                Padding="30"
                HorizontalOptions="Center"
@@ -206,7 +210,8 @@
                                    WidthRequest="40"/>
                     <Label Text="Processing your booking..." 
                        HorizontalOptions="Center"
-                       FontSize="16"/>
+                       FontSize="16"
+                       TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
                 </StackLayout>
             </Frame>
         </Grid>

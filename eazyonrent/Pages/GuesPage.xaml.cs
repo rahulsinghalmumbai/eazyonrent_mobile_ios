@@ -57,21 +57,88 @@ public partial class GuesPage : ContentPage, INotifyPropertyChanged
         LoadCategoriesFromAPI();
     }
 
+    //private async Task LoadItemsFromAPI()
+    //{
+    //    try
+    //    {
+    //        IsLoading = true;
+    //        var apiResponse = await _guestServices.GetGuestItemsAsync();
+    //        if (apiResponse != null && apiResponse.ResponseCode == "000" && apiResponse.ItemList != null)
+    //        {
+    //            Items.Clear();
+    //            foreach (var item in apiResponse.ItemList)
+    //            {
+    //                if (string.IsNullOrEmpty(item.Location))
+    //                    item.Location = "Noida";
+
+    //                if (item.ItemImageList != null && item.ItemImageList.Count > 0)
+    //                {
+    //                    item.Images = item.ItemImageList
+    //                        .Where(img => !string.IsNullOrEmpty(img.ImageName))
+    //                        .Select(img => img.ImageName)
+    //                        .ToList();
+    //                }
+    //                else
+    //                {
+    //                    item.Images = GetDummyImagesForCategory(item.CategoryId ?? 0);
+    //                }
+
+    //                Items.Add(item);
+    //            }
+    //        }
+    //        else
+    //        {
+    //            await DisplayAlert("Error", apiResponse?.ResponseMessage ?? "Failed to load items", "OK");
+    //            LoadFallbackData();
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        await DisplayAlert("Error", $"Error loading data: {ex.Message}", "OK");
+    //        LoadFallbackData();
+    //    }
+    //    finally
+    //    {
+    //        IsLoading = false;
+    //    }
+    //}
+
     private async Task LoadItemsFromAPI()
     {
         try
         {
             IsLoading = true;
-            var apiResponse = await _guestServices.GetGuestItemsAsync();
-            if (apiResponse != null && apiResponse.ResponseCode == "000" && apiResponse.ItemList != null)
+
+            string searchText = SearchEntry.Text?.Trim();
+
+            string companyName = null;
+            
+
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                companyName = searchText;
+                
+            }
+
+            var apiResponse = await _guestServices.GetGuestItemsAsync(
+                _selectedCategoryId,
+                companyName
+                
+            );
+
+            if (apiResponse != null &&
+                apiResponse.ResponseCode == "000" &&
+                apiResponse.ItemList != null)
             {
                 Items.Clear();
+
                 foreach (var item in apiResponse.ItemList)
                 {
                     if (string.IsNullOrEmpty(item.Location))
                         item.Location = "Noida";
 
-                    if (item.ItemImageList != null && item.ItemImageList.Count > 0)
+                    if (item.ItemImageList != null &&
+                        item.ItemImageList.Count > 0)
                     {
                         item.Images = item.ItemImageList
                             .Where(img => !string.IsNullOrEmpty(img.ImageName))
@@ -88,20 +155,67 @@ public partial class GuesPage : ContentPage, INotifyPropertyChanged
             }
             else
             {
-                await DisplayAlert("Error", apiResponse?.ResponseMessage ?? "Failed to load items", "OK");
-                LoadFallbackData();
+                await DisplayAlert("Error",
+                    apiResponse?.ResponseMessage ?? "Failed to load items",
+                    "OK");
             }
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Error", $"Error loading data: {ex.Message}", "OK");
-            LoadFallbackData();
+            await DisplayAlert("Error",
+                $"Error loading data: {ex.Message}",
+                "OK");
         }
         finally
         {
             IsLoading = false;
         }
     }
+
+    private async void OnSearchTextChanged(object sender, TextChangedEventArgs e)
+    {
+        await Task.Delay(5000);
+        await LoadItemsFromAPI();
+    }
+
+    //private async void OnCategorySelected(object sender, EventArgs e)
+    //{
+    //    var tappedEventArgs = e as TappedEventArgs;
+
+    //    if (tappedEventArgs?.Parameter is Categorie selectedCategory)
+    //    {
+    //        foreach (var category in Categories)
+    //        {
+    //            category.IsSelected = category.Id == selectedCategory.Id;
+    //        }
+
+    //        _selectedCategoryId = selectedCategory.Id == 0 ? null : selectedCategory.Id;
+
+    //        if (_selectedCategoryId != null)
+    //        {
+    //            SearchEntry.Text = selectedCategory.CategoriesName;
+    //            ClearCategoryBtn.IsVisible = true;
+    //        }
+
+    //        CategoryFilterLayout.IsVisible = false;
+    //        isFilterVisible = false;
+
+    //        await LoadItemsFromAPI();
+    //    }
+    //}
+
+    private async void OnClearCategoryClicked(object sender, EventArgs e)
+    {
+        _selectedCategoryId = null;
+
+        SearchEntry.Text = string.Empty;
+
+        ClearCategoryBtn.IsVisible = false;
+
+        await LoadItemsFromAPI();
+    }
+
+
     private async void OnCategorySelected(object sender, EventArgs e)
     {
         var tappedEventArgs = e as TappedEventArgs;
@@ -118,10 +232,12 @@ public partial class GuesPage : ContentPage, INotifyPropertyChanged
             // Hide filter dropdown
             CategoryFilterLayout.IsVisible = false;
             isFilterVisible = false;
-            CategoryFilterBtn.Text = "🔽 Filter";
-
+            CategoryFilterBtn.Text = selectedCategory.CategoriesName; ;
+            //CategoryFilterBtn.Text = "🔽 Filter";
+            await LoadItemsFromAPI();
+            ClearCategoryBtn.IsVisible = true;
             // Filter items based on selection
-           // await FilterItemsByCategory();
+            // await FilterItemsByCategory();
 
             await DisplayAlert("Filter Applied", $"Showing items for: {selectedCategory.CategoriesName}", "OK");
         }

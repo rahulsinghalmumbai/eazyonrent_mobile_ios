@@ -18,7 +18,7 @@ namespace eazyonrent.Connection
         public const string GetAllCat = "Categories/GellALLCategories";
 
         //3.for itme images
-        public const string GetGuestItem = "Lister/GetGuestItems";
+        public const string GetGuestItem = "Lister/GetGuestItems?";
         //4.for item details by id
         public const string GetItemDetailsById = "Lister/GetItemById";
         //5.for profile item by user(lister) id
@@ -36,8 +36,8 @@ namespace eazyonrent.Connection
         public const string AddItmeImages = "Lister/uploadItemImages";
 
         public const string BookItem = "Lister/bookItem";
-        
 
+        public const string UpdateItem = "Lister/editListerItem"; 
         public const string HistoryItme = "Lister/bookHistory";
     }
 }

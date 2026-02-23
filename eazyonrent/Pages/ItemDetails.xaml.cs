@@ -16,7 +16,12 @@ public partial class ItemDetails : ContentPage, INotifyPropertyChanged
     private string _currentImage;
     private int _currentImageIndex = 0;
     private double _imageZoom = 1.0;
- 
+
+    double currentScale = 1;
+    double startScale = 1;
+    double xOffset = 0;
+    double yOffset = 0;
+
     private bool _isLoading;
 
     private readonly GuestServices _guestServices;
@@ -96,6 +101,9 @@ public partial class ItemDetails : ContentPage, INotifyPropertyChanged
         _guestServices = new GuestServices();
         _listerId = listerId;
         _itemId = itemId;
+       
+
+        CheckEditPermission();
         InitializeData();
        
     }
@@ -341,17 +349,32 @@ public partial class ItemDetails : ContentPage, INotifyPropertyChanged
         NavigateToNextImage();
     }
 
-    private void OnZoomInClicked(object sender, EventArgs e)
+
+    private async void OnZoomInClicked(object sender, EventArgs e)
     {
         _imageZoom = Math.Min(_imageZoom + 0.2, 3.0);
-        // Note: Actual zoom requires custom implementation
+
+        MainImage.AnchorX = 0;
+        MainImage.AnchorY = 0;
+
+        await MainImage.ScaleTo(_imageZoom, 150);
     }
 
-    private void OnZoomOutClicked(object sender, EventArgs e)
+    private async void OnZoomOutClicked(object sender, EventArgs e)
     {
-        _imageZoom = Math.Max(_imageZoom - 0.2, 0.5);
-        // Note: Actual zoom requires custom implementation
+        _imageZoom = Math.Max(_imageZoom - 0.2, 1.0);
+
+        MainImage.AnchorX = 0;
+        MainImage.AnchorY = 0;
+
+        await MainImage.ScaleTo(_imageZoom, 150);
+
+        //if (_imageZoom == 1.0)
+        //{
+        //    await ImageScrollView.ScrollToAsync(0, 0, false);
+        //}
     }
+
 
     private void OnThumbnailSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -412,6 +435,77 @@ public partial class ItemDetails : ContentPage, INotifyPropertyChanged
         }
     }
 
+    private async void CheckEditPermission()
+    {
+        try
+        {
+            var storedListerId = await SecureStorage.GetAsync("ListerId");
+            var storedListerIdFirst = await SecureStorage.GetAsync("ListerIdFirst");
+
+            if (
+                (!string.IsNullOrEmpty(storedListerId) &&
+                 _listerId.ToString() == storedListerId)
+                ||
+                (!string.IsNullOrEmpty(storedListerIdFirst) &&
+                 _listerId.ToString() == storedListerIdFirst)
+               )
+            {
+                EditButton.IsVisible = true;
+            }
+            else
+            {
+                EditButton.IsVisible = false;
+            }
+        }
+        catch
+        {
+            EditButton.IsVisible = false;
+        }
+    }
+    private async void EditButton_Clicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new EditItemPage(_itemId, _listerId)); 
+    }
+    private void OnPinchUpdated(object sender, PinchGestureUpdatedEventArgs e)
+    {
+        if (e.Status == GestureStatus.Started)
+        {
+            startScale = MainImage.Scale;
+            MainImage.AnchorX = 0;
+            MainImage.AnchorY = 0;
+        }
+
+        if (e.Status == GestureStatus.Running)
+        {
+            currentScale = Math.Max(1, startScale * e.Scale);
+
+            MainImage.Scale = currentScale;
+        }
+    }
+    private void OnPanUpdated(object sender, PanUpdatedEventArgs e)
+    {
+        if (currentScale <= 1)
+            return; 
+
+        switch (e.StatusType)
+        {
+            case GestureStatus.Running:
+
+                double newX = xOffset + e.TotalX;
+                double newY = yOffset + e.TotalY;
+
+                MainImage.TranslationX = newX;
+                MainImage.TranslationY = newY;
+                break;
+
+            case GestureStatus.Completed:
+
+                xOffset = MainImage.TranslationX;
+                yOffset = MainImage.TranslationY;
+                break;
+        }
+    }
+
     public void NavigateToNextImage()
     {
         if (ItemImages?.Count > 0)
@@ -461,6 +555,8 @@ public partial class ItemDetails : ContentPage, INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
+
+
 
 
 

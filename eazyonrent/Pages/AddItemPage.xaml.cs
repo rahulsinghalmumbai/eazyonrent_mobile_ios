@@ -1,4 +1,4 @@
-using eazyonrent.Model;
+﻿using eazyonrent.Model;
 using eazyonrent.Services;
 using Microsoft.Maui.Controls;
 using System.Collections.ObjectModel;
@@ -17,29 +17,24 @@ public partial class AddItemPage : ContentPage, INotifyPropertyChanged
     private readonly GuestServices _guestServices;
     private readonly AddItemsServices addItemsServices;
 
-
     private List<Stream> _selectedImageStreams = new List<Stream>();
     private List<string> _selectedImageNames = new List<string>();
-    //private readonly AddItemsServices addItemsServices;
+    private List<string> _selectedImagePaths = new List<string>();
+    private int _replaceIndex = -1;
+
+
     public ObservableCollection<Categorie> Categories
     {
         get => _categories;
-        set
-        {
-            _categories = value;
-            OnPropertyChanged();
-        }
+        set { _categories = value; OnPropertyChanged(); }
     }
 
     public Categorie SelectedCategory
     {
         get => _selectedCategory;
-        set
-        {
-            _selectedCategory = value;
-            OnPropertyChanged();
-        }
+        set { _selectedCategory = value; OnPropertyChanged(); }
     }
+
 
     public AddItemPage()
     {
@@ -50,66 +45,46 @@ public partial class AddItemPage : ContentPage, INotifyPropertyChanged
         InitializeForm();
         BindingContext = this;
 
-        // Load categories after UI is initialized
         Loaded += async (s, e) => await LoadCategoriesAsync();
     }
 
     private void InitializeForm()
     {
-        // Initialize ObservableCollection first
         Categories = new ObservableCollection<Categorie>();
-
-        // Set default values
         AvailableFromPicker.Date = DateTime.Today;
         StatusPicker.SelectedIndex = 0;
     }
+
 
     private async Task LoadCategoriesAsync()
     {
         try
         {
-            // Show loading if needed
-            // await DisplayAlert("Info", "Loading categories...", "OK");
-
             var apiResponse = await _guestServices.GetAllCategoriesAsync();
 
             if (apiResponse != null && apiResponse.ResponseCode == "000" && apiResponse.CategoriesList != null)
             {
-                // Clear and add on UI thread
                 await MainThread.InvokeOnMainThreadAsync(() =>
                 {
                     Categories.Clear();
                     foreach (var category in apiResponse.CategoriesList)
-                    {
                         Categories.Add(category);
-                    }
 
-                    // Debug: Check if categories loaded
                     System.Diagnostics.Debug.WriteLine($"Categories loaded: {Categories.Count}");
 
-                    // Set default category if available
                     if (Categories.Any())
-                    {
                         SelectedCategory = Categories.First();
-                    }
                 });
             }
             else
             {
-                // Load fallback if API fails
-                await MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    LoadFallbackCategories();
-                });
+                await MainThread.InvokeOnMainThreadAsync(LoadFallbackCategories);
             }
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"LoadCategoriesAsync Error: {ex.Message}");
-            await MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                LoadFallbackCategories();
-            });
+            await MainThread.InvokeOnMainThreadAsync(LoadFallbackCategories);
         }
     }
 
@@ -121,16 +96,48 @@ public partial class AddItemPage : ContentPage, INotifyPropertyChanged
         Categories.Add(new Categorie { Id = 3, CategoriesName = "Drone", Status = true });
         Categories.Add(new Categorie { Id = 4, CategoriesName = "Clothes", Status = true });
 
-        // Set default selection
         if (Categories.Any())
-        {
             SelectedCategory = Categories.First();
-        }
 
         System.Diagnostics.Debug.WriteLine($"Fallback categories loaded: {Categories.Count}");
     }
 
+
     private async void OnCameraClicked(object sender, EventArgs e)
+    {
+        _replaceIndex = -1; // Add mode
+        await OpenImagePicker();
+    }
+
+
+    private async void OnReplaceImageClicked(object sender, EventArgs e)
+    {
+        if (sender is Button btn && btn.CommandParameter is int index)
+        {
+            _replaceIndex = index;
+            await OpenImagePicker();
+        }
+    }
+
+
+    private void OnDeleteImageClicked(object sender, EventArgs e)
+    {
+        if (sender is Button btn && btn.CommandParameter is int index)
+        {
+            if (index >= 0 && index < _selectedImageStreams.Count)
+            {
+                _selectedImageStreams[index]?.Dispose();
+                _selectedImageStreams.RemoveAt(index);
+                _selectedImageNames.RemoveAt(index);
+                _selectedImagePaths.RemoveAt(index);
+            }
+
+            RefreshImagePreviewUI();
+        }
+    }
+
+
+    private async Task OpenImagePicker()
     {
         try
         {
@@ -144,28 +151,24 @@ public partial class AddItemPage : ContentPage, INotifyPropertyChanged
                 case "Gallery":
                     await PickSinglePhoto();
                     break;
-               
             }
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Error", $"Camera error: {ex.Message}", "OK");
+            await DisplayAlert("Error", $"Image picker error: {ex.Message}", "OK");
         }
     }
 
-    
     private async Task TakePhoto()
     {
         try
         {
-            // Check if camera is available
             if (!MediaPicker.Default.IsCaptureSupported)
             {
                 await DisplayAlert("Error", "Camera not supported on this device", "OK");
                 return;
             }
 
-            // Request camera permission
             var status = await Permissions.RequestAsync<Permissions.Camera>();
             if (status != PermissionStatus.Granted)
             {
@@ -173,16 +176,13 @@ public partial class AddItemPage : ContentPage, INotifyPropertyChanged
                 return;
             }
 
-            // Capture photo
             var photo = await MediaPicker.Default.CapturePhotoAsync(new MediaPickerOptions
             {
                 Title = "Take a photo"
             });
 
             if (photo != null)
-            {
                 await ProcessSelectedImage(photo);
-            }
         }
         catch (FeatureNotSupportedException)
         {
@@ -197,6 +197,7 @@ public partial class AddItemPage : ContentPage, INotifyPropertyChanged
             await DisplayAlert("Error", $"Failed to take photo: {ex.Message}", "OK");
         }
     }
+
     private async Task PickSinglePhoto()
     {
         try
@@ -214,9 +215,7 @@ public partial class AddItemPage : ContentPage, INotifyPropertyChanged
             });
 
             if (photo != null)
-            {
                 await ProcessSelectedImage(photo);
-            }
         }
         catch (Exception ex)
         {
@@ -224,18 +223,31 @@ public partial class AddItemPage : ContentPage, INotifyPropertyChanged
         }
     }
 
+
     private async Task ProcessSelectedImage(FileResult photo)
     {
         try
         {
-            var stream = await photo.OpenReadAsync();
+            var uploadStream = await photo.OpenReadAsync();
 
-            // Store stream and filename directly
-            _selectedImageStreams.Add(stream);
-            _selectedImageNames.Add(photo.FileName);
+            if (_replaceIndex >= 0 && _replaceIndex < _selectedImageStreams.Count)
+            {
+                // REPLACE MODE — usi index ki image replace karo
+                _selectedImageStreams[_replaceIndex]?.Dispose();
+                _selectedImageStreams[_replaceIndex] = uploadStream;
+                _selectedImageNames[_replaceIndex] = photo.FileName;
+                _selectedImagePaths[_replaceIndex] = photo.FullPath;
+                _replaceIndex = -1;
+            }
+            else
+            {
+                // ADD MODE — list ke end mein add karo
+                _selectedImageStreams.Add(uploadStream);
+                _selectedImageNames.Add(photo.FileName);
+                _selectedImagePaths.Add(photo.FullPath);
+            }
 
-            await DisplayAlert("Success",
-                $"Image added successfully!\nTotal images: {_selectedImageStreams.Count}", "OK");
+            await MainThread.InvokeOnMainThreadAsync(RefreshImagePreviewUI);
         }
         catch (Exception ex)
         {
@@ -243,17 +255,186 @@ public partial class AddItemPage : ContentPage, INotifyPropertyChanged
         }
     }
 
+    private void RefreshImagePreviewUI()
+    {
+        // Puri strip clear karo
+        ImagePreviewStack.Children.Clear();
+
+        int count = _selectedImagePaths.Count;
+
+        if (count == 0)
+        {
+            EmptyImagePlaceholder.IsVisible = true;
+            ImageScrollView.IsVisible = false;
+            ImageCountBadge.IsVisible = false;
+            return;
+        }
+
+        // Images hain
+        EmptyImagePlaceholder.IsVisible = false;
+        ImageScrollView.IsVisible = true;
+        ImageCountBadge.IsVisible = true;
+        ImageCountLabel.Text = $"{count} image{(count > 1 ? "s" : "")} selected";
+
+        for (int i = 0; i < count; i++)
+        {
+            int capturedIndex = i;
+            string path = _selectedImagePaths[i];
+
+            // ── Outer Grid container ──────────────────────────────────────
+            var container = new Grid
+            {
+                WidthRequest = 110,
+                HeightRequest = 120,
+                Margin = new Thickness(0, 4, 0, 4)
+            };
+
+            // ── Image Frame ───────────────────────────────────────────────
+            var imageFrame = new Frame
+            {
+                CornerRadius = 10,
+                Padding = new Thickness(0),
+                HasShadow = true,
+                IsClippedToBounds = true,
+                HeightRequest = 100,
+                WidthRequest = 110,
+                VerticalOptions = LayoutOptions.Start,
+                BackgroundColor = Color.FromArgb("#E0E0E0")
+            };
+
+            var img = new Image
+            {
+                Aspect = Aspect.AspectFill,
+                HeightRequest = 100,
+                WidthRequest = 110
+            };
+
+            try
+            {
+                var previewStream = File.OpenRead(path);
+                img.Source = ImageSource.FromStream(() => previewStream);
+            }
+            catch
+            {
+                img.Source = "placeholder.png"; 
+            }
+
+            imageFrame.Content = img;
+
+            var numberFrame = new Frame
+            {
+                BackgroundColor = Color.FromArgb("#4a6fc7"),
+                CornerRadius = 10,
+                Padding = new Thickness(6, 2),
+                HasShadow = false,
+                HorizontalOptions = LayoutOptions.Start,
+                VerticalOptions = LayoutOptions.Start,
+                Margin = new Thickness(4, 4, 0, 0)
+            };
+            numberFrame.Content = new Label
+            {
+                Text = $"{i + 1}",
+                FontSize = 11,
+                FontAttributes = FontAttributes.Bold,
+                TextColor = Colors.White
+            };
+
+            var deleteBtn = new Button
+            {
+                Text = "✕",
+                FontSize = 11,
+                FontAttributes = FontAttributes.Bold,
+                BackgroundColor = Color.FromArgb("#E53935"),
+                TextColor = Colors.White,
+                CornerRadius = 12,
+                WidthRequest = 26,
+                HeightRequest = 26,
+                Padding = new Thickness(0),
+                HorizontalOptions = LayoutOptions.End,
+                VerticalOptions = LayoutOptions.Start,
+                Margin = new Thickness(0, 4, 4, 0),
+                CommandParameter = capturedIndex
+            };
+            deleteBtn.Clicked += OnDeleteImageClicked;
+
+            // ── Replace button (🔄 Change) — bottom strip ─────────────────
+            var replaceBtn = new Button
+            {
+                Text = "🔄 Change",
+                FontSize = 10,
+                BackgroundColor = Color.FromArgb("#CC000000"),
+                TextColor = Colors.White,
+                CornerRadius = 0,
+                HeightRequest = 28,
+                Padding = new Thickness(0),
+                HorizontalOptions = LayoutOptions.Fill,
+                VerticalOptions = LayoutOptions.End,
+                CommandParameter = capturedIndex
+            };
+            replaceBtn.Clicked += OnReplaceImageClicked;
+
+            container.Children.Add(imageFrame);
+            container.Children.Add(replaceBtn);
+            container.Children.Add(numberFrame);
+            container.Children.Add(deleteBtn);
+
+            ImagePreviewStack.Children.Add(container);
+        }
+        var addMoreFrame = new Frame
+        {
+            WidthRequest = 90,
+            HeightRequest = 100,
+            CornerRadius = 10,
+            BackgroundColor = Color.FromArgb("#E8EAF6"),
+            BorderColor = Color.FromArgb("#4a6fc7"),
+            HasShadow = false,
+            Margin = new Thickness(0, 4, 0, 4),
+            VerticalOptions = LayoutOptions.Start
+        };
+
+        var addMoreStack = new StackLayout
+        {
+            VerticalOptions = LayoutOptions.Center,
+            HorizontalOptions = LayoutOptions.Center,
+            Spacing = 4
+        };
+        addMoreStack.Children.Add(new Label
+        {
+            Text = "＋",
+            FontSize = 28,
+            FontAttributes = FontAttributes.Bold,
+            TextColor = Color.FromArgb("#4a6fc7"),
+            HorizontalOptions = LayoutOptions.Center
+        });
+        addMoreStack.Children.Add(new Label
+        {
+            Text = "Add More",
+            FontSize = 11,
+            TextColor = Color.FromArgb("#4a6fc7"),
+            HorizontalOptions = LayoutOptions.Center
+        });
+
+        addMoreFrame.Content = addMoreStack;
+        addMoreFrame.GestureRecognizers.Add(new TapGestureRecognizer
+        {
+            Command = new Command(async () =>
+            {
+                _replaceIndex = -1;
+                await OpenImagePicker();
+            })
+        });
+
+        ImagePreviewStack.Children.Add(addMoreFrame);
+    }
 
 
-    private async void OnSaveClicked(object sender, EventArgs e) 
+    private async void OnSaveClicked(object sender, EventArgs e)
     {
         try
         {
-            // Show loading indicator
             SaveButton.Text = "Saving...";
             SaveButton.IsEnabled = false;
 
-            // Validate inputs
             if (!await ValidateInputs())
             {
                 SaveButton.Text = "Save Item";
@@ -261,29 +442,22 @@ public partial class AddItemPage : ContentPage, INotifyPropertyChanged
                 return;
             }
 
-            // Get selected category ID
             int categoryId = SelectedCategory?.Id ?? 1;
             int listerId = 0;
 
-            // First time login id
             var listerIdFirst = await SecureStorage.GetAsync("ListerIdFirst");
-            // Regular id
             var listerIdNormal = await SecureStorage.GetAsync("ListerId");
 
             if (!string.IsNullOrEmpty(listerIdFirst))
             {
-                // agar first time wala id exist karta hai use karo
                 listerId = int.Parse(listerIdFirst);
-                // ek baar use karne ke baad hata bhi sakte ho (optional)
                 await SecureStorage.SetAsync("ListerIdFirst", "");
             }
             else if (!string.IsNullOrEmpty(listerIdNormal))
             {
-                // otherwise normal wala use karo
                 listerId = int.Parse(listerIdNormal);
             }
 
-            // Create ListerItem object
             var listerItem = new ListerItem
             {
                 ListerItemId = 0,
@@ -298,25 +472,21 @@ public partial class AddItemPage : ContentPage, INotifyPropertyChanged
                 CategoryId = categoryId
             };
 
-            // Call API to save item
             var response = await addItemsServices.AddItem(listerItem);
+            await SecureStorage.SetAsync("responseListerItemId", response.ListerItemId.ToString());
 
-            await SecureStorage.SetAsync("responseListerItemId",response.ListerItemId.ToString());
             if (response != null && response.ResponseCode == "000")
             {
-
                 if (_selectedImageStreams.Count > 0)
                 {
                     SaveButton.Text = "Uploading Images...";
 
-                    // Get ListerItemId from SecureStorage
                     var savedListerItemId = await SecureStorage.GetAsync("responseListerItemId");
                     if (!string.IsNullOrEmpty(savedListerItemId))
-                    {
                         await UploadSelectedImages(int.Parse(savedListerItemId));
-                    }
                 }
-                    await DisplayAlert("Success", "Item saved successfully!", "OK");
+
+                await DisplayAlert("Success", "Item saved successfully!", "OK");
                 ClearForm();
             }
             else
@@ -327,7 +497,7 @@ public partial class AddItemPage : ContentPage, INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-               await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
+            await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
         }
         finally
         {
@@ -335,7 +505,7 @@ public partial class AddItemPage : ContentPage, INotifyPropertyChanged
             SaveButton.IsEnabled = true;
         }
     }
-    // Upload images using stored ListerItemId
+
     private async Task UploadSelectedImages(int listerItemId)
     {
         try
@@ -345,70 +515,53 @@ public partial class AddItemPage : ContentPage, INotifyPropertyChanged
                 var uploadResponse = await addItemsServices.UploadItemImages(
                     listerItemId: listerItemId,
                     imageFiles: _selectedImageStreams,
-                    fileNames: _selectedImageNames  // IMPORTANT: Pass fileNames
+                    fileNames: _selectedImageNames
                 );
 
                 if (uploadResponse?.ResponseCode != "000")
-                {
-                    await DisplayAlert("Warning",
-                        $"Item saved but image upload failed: {uploadResponse?.ResponseMessage}", "OK");
-                }
+                    await DisplayAlert("Warning", $"Item saved but image upload failed: {uploadResponse?.ResponseMessage}", "OK");
                 else
-                {
                     await DisplayAlert("Success", "Images uploaded successfully!", "OK");
-                }
             }
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Warning",
-                $"Item saved but image upload failed: {ex.Message}", "OK");
+            await DisplayAlert("Warning", $"Item saved but image upload failed: {ex.Message}", "OK");
         }
     }
 
     private async Task<bool> ValidateInputs()
     {
-        // Validate Category Selection
         if (SelectedCategory == null)
         {
             await DisplayAlert("Validation Error", "Please select a category", "OK");
             return false;
         }
-
-        // Validate Item Name
         if (string.IsNullOrWhiteSpace(NameEntry.Text))
         {
-           await DisplayAlert("Validation Error", "Please enter item name", "OK");
+            await DisplayAlert("Validation Error", "Please enter item name", "OK");
             return false;
         }
-
-        // Validate Price
         if (string.IsNullOrWhiteSpace(PriceEntry.Text))
         {
-           await DisplayAlert("Validation Error", "Please enter price", "OK");
+            await DisplayAlert("Validation Error", "Please enter price", "OK");
             return false;
         }
-
         if (!decimal.TryParse(PriceEntry.Text, out decimal price) || price <= 0)
         {
             await DisplayAlert("Validation Error", "Please enter valid price", "OK");
             return false;
         }
-
-        // Validate Status Selection
         if (StatusPicker.SelectedIndex == -1)
         {
             await DisplayAlert("Validation Error", "Please select status", "OK");
             return false;
         }
-
-        // Validate Available From Date
         if (AvailableFromPicker.Date < DateTime.Today)
         {
             await DisplayAlert("Validation Error", "Available from date cannot be in the past", "OK");
             return false;
         }
-
         return true;
     }
 
@@ -416,10 +569,10 @@ public partial class AddItemPage : ContentPage, INotifyPropertyChanged
     {
         return StatusPicker.SelectedIndex switch
         {
-            0 => 1, 
-            1 => 0, 
-            2 => 2, 
-            _ => 1  
+            0 => 1,
+            1 => 0,
+            2 => 2,
+            _ => 1
         };
     }
 
@@ -433,18 +586,14 @@ public partial class AddItemPage : ContentPage, INotifyPropertyChanged
     //    try
     //    {
     //        var apiEndpoint = "https://your-api-endpoint.com/api/listeritems";
-
     //        var options = new JsonSerializerOptions
     //        {
     //            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     //            WriteIndented = true
     //        };
-
     //        var json = JsonSerializer.Serialize(item, options);
     //        var content = new StringContent(json, Encoding.UTF8, "application/json");
-
     //        var response = await _httpClient.PostAsync(apiEndpoint, content);
-
     //        if (response.IsSuccessStatusCode)
     //        {
     //            return true;
@@ -471,11 +620,18 @@ public partial class AddItemPage : ContentPage, INotifyPropertyChanged
         AvailableFromPicker.Date = DateTime.Today;
         StatusPicker.SelectedIndex = 0;
 
-        // Reset to first category
+        // Image lists clear karo
+        foreach (var s in _selectedImageStreams) s?.Dispose();
+        _selectedImageStreams.Clear();
+        _selectedImageNames.Clear();
+        _selectedImagePaths.Clear();
+        _replaceIndex = -1;
+
+        // UI reset
+        RefreshImagePreviewUI();
+
         if (Categories.Any())
-        {
             SelectedCategory = Categories.First();
-        }
     }
 
     protected override void OnDisappearing()
