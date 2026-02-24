@@ -148,7 +148,6 @@ public partial class EditItemPage : ContentPage
             // ✅ Selected Category se CategoryId lo
             var selectedCat = CategoryPicker.SelectedItem as Categorie;
 
-            // ✅ Payload banao
             var payload = new
             {
                 listerItemId = _listerItemId,
@@ -199,29 +198,29 @@ public partial class EditItemPage : ContentPage
         return StatusPicker.SelectedIndex switch
         {
             0 => 1,
-            1 => 0,
-            2 => 2,
+            1 => 2,
+            2 => 3,
             _ => 1
         };
     }
 }
 
 
-public class ItemDetailResponse
-{
-    public List<ItemListModel> ItemList { get; set; }
-}
+//public class ItemDetailResponse
+//{
+//    public List<ItemListModel> ItemList { get; set; }
+//}
 
-public class ItemListModel
-{
-    public int ListerItemId { get; set; }
-    public string? ItemName { get; set; }
-    public string? CompanyName { get; set; }
-    public int ListerId { get; set; }
-    public decimal ItemCost { get; set; }
-    public string? ItemDescriptions { get; set; }
-    public string? Availablefrom { get; set; }
-    public string? Status { get; set; }
-    public int CategoryId { get; set; }
-    public string? CategoryName { get; set; }
-}
+//public class ItemListModel
+//{
+//    public int ListerItemId { get; set; }
+//    public string? ItemName { get; set; }
+//    public string? CompanyName { get; set; }
+//    public int ListerId { get; set; }
+//    public decimal ItemCost { get; set; }
+//    public string? ItemDescriptions { get; set; }
+//    public string? Availablefrom { get; set; }
+//    public string? Status { get; set; }
+//    public int CategoryId { get; set; }
+//    public string? CategoryName { get; set; }
+//}

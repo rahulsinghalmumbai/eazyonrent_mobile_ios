@@ -172,7 +172,15 @@ public partial class AddItemPage : ContentPage, INotifyPropertyChanged
             var status = await Permissions.RequestAsync<Permissions.Camera>();
             if (status != PermissionStatus.Granted)
             {
-                await DisplayAlert("Permission Denied", "Camera permission is required to take photos", "OK");
+                bool open = await DisplayAlert(
+                    "Permission Denied",
+                    "Camera permission is required to take photos. Open Settings to enable?",
+                    "Open Settings",
+                    "Cancel");
+
+                if (open)
+                    Microsoft.Maui.ApplicationModel.AppInfo.ShowSettingsUI();
+
                 return;
             }
 

@@ -103,7 +103,9 @@
 		</MauiXaml>
 		<MauiXaml Update="Pages\GuesPage.xaml"><Generator>MSBuild:Compile</Generator></MauiXaml>
 		<MauiXaml Update="Pages\ItemDetails.xaml"><Generator>MSBuild:Compile</Generator></MauiXaml>
-		<MauiXaml Update="Pages\LoginPage.Xaml"><Generator>MSBuild:Compile</Generator></MauiXaml>
+		<MauiXaml Update="Pages\LoginPage.
+				  
+		Xaml"><Generator>MSBuild:Compile</Generator></MauiXaml>
 		<MauiXaml Update="Pages\UserChatPage.xaml"><Generator>MSBuild:Compile</Generator></MauiXaml>
 		<MauiXaml Update="Pages\UserProfilePage.xaml"><Generator>MSBuild:Compile</Generator></MauiXaml>
 	</ItemGroup>

@@ -62,6 +62,7 @@
                        HasShadow="False">
                     <Entry x:Name="CompanyNameEntry"
                            Placeholder="Enter company name"
+                           IsReadOnly="True"
                            PlaceholderColor="{AppThemeBinding Light=#999, Dark=#777777}"
                            TextColor="{AppThemeBinding Light=Black, Dark=White}"
                            BackgroundColor="Transparent"
