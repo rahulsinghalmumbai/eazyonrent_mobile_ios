@@ -578,8 +578,8 @@ public partial class AddItemPage : ContentPage, INotifyPropertyChanged
         return StatusPicker.SelectedIndex switch
         {
             0 => 1,
-            1 => 0,
-            2 => 2,
+            1 => 2,
+            2 => 3,
             _ => 1
         };
     }

@@ -35,6 +35,8 @@ namespace eazyonrent.Connection
         //9.for upload item images
         public const string AddItmeImages = "Lister/uploadItemImages";
 
+        public const string UpdateItemImage = "Lister/updateItemImage";
+
         public const string BookItem = "Lister/bookItem";
 
         public const string UpdateItem = "Lister/editListerItem"; 

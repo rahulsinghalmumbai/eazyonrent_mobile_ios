@@ -194,13 +194,17 @@
                             <Label Text="{Binding ItemData.Location}" FontSize="16" TextColor="{AppThemeBinding Light=#333, Dark=White}"/>
                         </VerticalStackLayout>
 
-                        <!-- Booking Status -->
-                        <VerticalStackLayout Spacing="5">
-                            <Label Text="Status:" FontSize="14" TextColor="{AppThemeBinding Light=#666, Dark=#AAAAAA}"/>
-                            <Frame BackgroundColor="#DCFCE7" CornerRadius="20" HasShadow="False" Padding="12,6">
-                                <Label Text="Available" TextColor="#166534" FontAttributes="Bold" HorizontalOptions="Center"/>
-                            </Frame>
-                        </VerticalStackLayout>
+						<!-- Booking Status -->
+						<VerticalStackLayout Spacing="5">
+							<Label Text="Status:" FontSize="14" TextColor="{AppThemeBinding Light=#666, Dark=#AAAAAA}"/>
+							<Frame BackgroundColor="{Binding StatusBackgroundColor}"
+								   CornerRadius="20" HasShadow="False" Padding="12,6">
+								<Label Text="{Binding StatusText}"
+									   TextColor="{Binding StatusTextColor}"
+									   FontAttributes="Bold"
+									   HorizontalOptions="Center"/>
+							</Frame>
+						</VerticalStackLayout>
 
                         <!-- Rating and Views -->
                         <Grid ColumnDefinitions="*,*" ColumnSpacing="20">

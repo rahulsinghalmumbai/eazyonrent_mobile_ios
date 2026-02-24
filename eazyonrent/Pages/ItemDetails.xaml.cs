@@ -535,7 +535,28 @@ public partial class ItemDetails : ContentPage, INotifyPropertyChanged
             OnPropertyChanged(nameof(ImageCounterText));
         }
     }
+    public string StatusText => _itemData?.Status switch
+    {
+        1 => "Active",
+        2 => "Inactive",
+        3 => "Pending",
+        _ => "Unknown"
+    };
 
+    public Color StatusBackgroundColor => _itemData?.Status switch
+    {
+        1 => Color.FromArgb("#DCFCE7"),  // Green — Active
+        2 => Color.FromArgb("#FEE2E2"),  // Red — Inactive
+        3 => Color.FromArgb("#FEF9C3"),  // Yellow — Pending
+        _ => Color.FromArgb("#F3F4F6")   // Gray — Unknown
+    };
+    public Color StatusTextColor => _itemData?.Status switch
+    {
+        1 => Color.FromArgb("#166534"), 
+        2 => Color.FromArgb("#991B1B"), 
+        3 => Color.FromArgb("#854D0E"), 
+        _ => Color.FromArgb("#374151")  
+    };
     private void RefreshAllProperties()
     {
         OnPropertyChanged(nameof(ItemData));
@@ -546,6 +567,10 @@ public partial class ItemDetails : ContentPage, INotifyPropertyChanged
         OnPropertyChanged(nameof(FormattedAvailableDate));
         OnPropertyChanged(nameof(ViewCount));
         OnPropertyChanged(nameof(ImageCounterText));
+
+        OnPropertyChanged(nameof(StatusText));          
+        OnPropertyChanged(nameof(StatusBackgroundColor)); 
+        OnPropertyChanged(nameof(StatusTextColor));       
     }
 
     public event PropertyChangedEventHandler PropertyChanged;

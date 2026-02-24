@@ -130,6 +130,79 @@ namespace eazyonrent.Services
             }
         }
 
+
+        public async Task<AddItemImagesResponse?> UpdateItemImages(
+    int listerItemId,
+    int listerId,
+    List<Stream> imageFiles,
+    List<string>? fileNames = null,
+    List<int?> imageIds = null) // ✅ imageIds add karo
+        {
+            try
+            {
+                var url = $"{Endpoints.UpdateItemImage}";
+
+                // ✅ Har image ke liye alag API call karo
+                for (int i = 0; i < imageFiles.Count; i++)
+                {
+                    using var content = new MultipartFormDataContent();
+
+                    // ✅ ImageId — replace hai to value, naya hai to 0
+                    int imageId = (imageIds != null && i < imageIds.Count && imageIds[i].HasValue)
+                                  ? imageIds[i].Value
+                                  : 0;
+
+                    content.Add(new StringContent(imageId.ToString()), "ImageId");
+                    content.Add(new StringContent(listerItemId.ToString()), "ListerItemId");
+
+                    var stream = imageFiles[i];
+                    if (stream.CanSeek)
+                        stream.Position = 0;
+
+                    string fileName = fileNames != null && i < fileNames.Count
+                        ? fileNames[i]
+                        : $"upload_{i}.jpg";
+
+                    string extension = Path.GetExtension(fileName)?.ToLower() ?? ".jpg";
+                    string mimeType = extension switch
+                    {
+                        ".jpg" or ".jpeg" => "image/jpeg",
+                        ".png" => "image/png",
+                        ".gif" => "image/gif",
+                        ".bmp" => "image/bmp",
+                        ".webp" => "image/webp",
+                        _ => "image/jpeg"
+                    };
+
+                    var streamContent = new StreamContent(stream);
+                    streamContent.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
+                    content.Add(streamContent, "ImageFiles", fileName);
+
+                    var response = await _httpClient.PostAsync(url, content);
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        var errorContent = await response.Content.ReadAsStringAsync();
+                        System.Diagnostics.Debug.WriteLine($"Image {i + 1} upload failed: {errorContent}");
+                    }
+                }
+
+                return new AddItemImagesResponse
+                {
+                    ResponseCode = "000",
+                    ResponseMessage = "Images uploaded successfully."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new AddItemImagesResponse
+                {
+                    ResponseCode = "999",
+                    ResponseMessage = $"Image Upload Exception: {ex.Message}"
+                };
+            }
+        }
+
     }
 }
 

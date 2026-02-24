@@ -210,6 +210,12 @@ public partial class GuesPage : ContentPage, INotifyPropertyChanged
 
         SearchEntry.Text = string.Empty;
 
+        // Reset selection UI
+        foreach (var category in Categories)
+        {
+            category.IsSelected = false;
+        }
+
         ClearCategoryBtn.IsVisible = false;
 
         await LoadItemsFromAPI();
