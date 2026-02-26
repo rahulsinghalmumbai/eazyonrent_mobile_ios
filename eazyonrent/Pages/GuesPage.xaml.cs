@@ -217,6 +217,7 @@ public partial class GuesPage : ContentPage, INotifyPropertyChanged
         }
 
         ClearCategoryBtn.IsVisible = false;
+        CategoryFilterBtn.Text = "🔽 Filter";
 
         await LoadItemsFromAPI();
     }

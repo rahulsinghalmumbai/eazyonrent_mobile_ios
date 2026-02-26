@@ -5,7 +5,7 @@ namespace eazyonrent.Connection
     public class AppSettings
     {
 
-        public const string BaseApiUrl = "https://eazyonrent.com/api/";
+        public const string BaseApiUrl = "https://api.eazyonrent.com/api/";
        // public const string BaseApiUrl = "https://localhost:7274/api/";
     }
     public static class Endpoints
