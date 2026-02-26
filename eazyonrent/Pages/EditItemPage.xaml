@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="eazyonrent.Pages.EditItemPage"
+             Title="Edit Item"
+             BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#1C1C1E}">
+
+	<ScrollView Padding="20">
+		<VerticalStackLayout Spacing="20">
+
+			<!-- IMAGE SECTION -->
+			<Frame BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#2C2C2E}"
+                   CornerRadius="10"
+                   HasShadow="True"
+                   Padding="12"
+                   BorderColor="{AppThemeBinding Light=Gray, Dark=#444444}">
+
+				<VerticalStackLayout Spacing="10">
+
+					<!-- Top row: Add Image button + count badge -->
+					<Grid ColumnDefinitions="*, Auto">
+						<Button Grid.Column="0"
+                                x:Name="CameraButton"
+                                Text="📷  Add Image"
+                                FontSize="15"
+                                FontAttributes="Bold"
+                                BackgroundColor="#4a6fc7"
+                                TextColor="White"
+                                CornerRadius="8"
+                                HeightRequest="45"
+                                HorizontalOptions="FillAndExpand"
+                                Clicked="OnCameraClicked"/>
+
+						<Frame Grid.Column="1"
+                               x:Name="ImageCountBadge"
+                               IsVisible="False"
+                               BackgroundColor="#28A745"
+                               CornerRadius="12"
+                               Padding="10,4"
+                               HasShadow="False"
+                               Margin="8,0,0,0"
+                               VerticalOptions="Center">
+							<Label x:Name="ImageCountLabel"
+                                   Text="0 images"
+                                   FontSize="12"
+                                   FontAttributes="Bold"
+                                   TextColor="White"/>
+						</Frame>
+					</Grid>
+
+					<!-- Empty state -->
+					<StackLayout x:Name="EmptyImagePlaceholder"
+                                 IsVisible="True"
+                                 HorizontalOptions="Center"
+                                 Spacing="4">
+						<Label Text="No images selected"
+                               FontSize="13"
+                               HorizontalOptions="Center"
+                               TextColor="{AppThemeBinding Light=#999, Dark=#777777}"/>
+						<Label Text="Tap 'Add Image' to pick from camera or gallery"
+                               FontSize="11"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               TextColor="{AppThemeBinding Light=#BBBBBB, Dark=#555555}"/>
+					</StackLayout>
+
+					<!-- Image Cards CollectionView -->
+					<!--<CollectionView x:Name="ImageCardsCollection"
+                                    IsVisible="False"
+                                    HeightRequest="160"
+                                    ItemsLayout="HorizontalList">
+						<CollectionView.ItemTemplate>
+							<DataTemplate>
+								<Grid WidthRequest="115"
+                                      HeightRequest="150"
+                                      Padding="5">
+
+									--><!-- Card Background --><!--
+									<Frame CornerRadius="10"
+                                           Padding="0"
+                                           HasShadow="True"
+                                           IsClippedToBounds="True"
+                                           BackgroundColor="#E0E0E0">
+
+										<Grid RowDefinitions="100, 30">
+
+											--><!-- Image --><!--
+											<Image Grid.Row="0"
+                                                   Source="{Binding DisplayPath}"
+                                                   Aspect="AspectFill"
+                                                   HeightRequest="100"/>
+
+											--><!-- Replace Button --><!--
+											<Button Grid.Row="1"
+                                                    Text="🔄 Change"
+                                                    FontSize="11"
+                                                    BackgroundColor="#4a6fc7"
+                                                    TextColor="White"
+                                                    CornerRadius="0"
+                                                    HeightRequest="30"
+                                                    Padding="0"
+                                                    CommandParameter="{Binding .}"
+                                                    Clicked="OnReplaceImageClicked"/>
+										</Grid>
+									</Frame>
+
+									--><!-- Delete Button (top-right overlay) --><!--
+									<Button Text="✕"
+                                            FontSize="11"
+                                            FontAttributes="Bold"
+                                            BackgroundColor="#E53935"
+                                            TextColor="red"
+                                            CornerRadius="12"
+                                            WidthRequest="26"
+                                            HeightRequest="26"
+                                            Padding="0"
+                                            HorizontalOptions="End"
+                                            VerticalOptions="Start"
+                                            Margin="0,8,8,0"
+                                            ZIndex="99"
+                                            CommandParameter="{Binding .}"
+                                            Clicked="OnDeleteImageClicked"/>
+
+									--><!-- Number Badge (top-left overlay) --><!--
+									<Frame BackgroundColor="#4a6fc7"
+                                           CornerRadius="8"
+                                           Padding="5,2"
+                                           HasShadow="False"
+                                           HorizontalOptions="Start"
+                                           VerticalOptions="Start"
+                                           Margin="8,8,0,0"
+                                           ZIndex="99">
+										<Label Text="{Binding Index}"
+                                               FontSize="11"
+                                               FontAttributes="Bold"
+                                               TextColor="White"/>
+									</Frame>
+
+								</Grid>
+							</DataTemplate>
+						</CollectionView.ItemTemplate>
+
+						--><!-- Add More Card at end --><!--
+						<CollectionView.Footer>
+							<Frame WidthRequest="90"
+                                   HeightRequest="130"
+                                   CornerRadius="10"
+                                   BackgroundColor="#E8EAF6"
+                                   BorderColor="#4a6fc7"
+                                   HasShadow="False"
+                                   Margin="5,10,5,5">
+								<Frame.GestureRecognizers>
+									<TapGestureRecognizer Tapped="OnAddMoreTapped"/>
+								</Frame.GestureRecognizers>
+								<VerticalStackLayout VerticalOptions="Center"
+                                                     HorizontalOptions="Center"
+                                                     Spacing="4">
+									<Label Text="＋"
+                                           FontSize="28"
+                                           FontAttributes="Bold"
+                                           TextColor="#4a6fc7"
+                                           HorizontalOptions="Center"/>
+									<Label Text="Add More"
+                                           FontSize="11"
+                                           TextColor="#4a6fc7"
+                                           HorizontalOptions="Center"/>
+								</VerticalStackLayout>
+							</Frame>
+						</CollectionView.Footer>
+
+					</CollectionView>-->
+
+					<!-- Image Cards CollectionView -->
+					<!-- Image Cards CollectionView -->
+					<CollectionView x:Name="ImageCardsCollection"
+									IsVisible="False"
+									HeightRequest="185"
+									ItemsLayout="HorizontalList">
+						<CollectionView.ItemTemplate>
+							<DataTemplate>
+
+								<Grid WidthRequest="120"
+									  HeightRequest="175"
+									  Margin="5,5,5,5">
+
+									<Grid.RowDefinitions>
+										<RowDefinition Height="30"/>
+										<!-- Row 0: Delete button -->
+										<RowDefinition Height="100"/>
+										<!-- Row 1: Image -->
+										<RowDefinition Height="35"/>
+										<!-- Row 2: Change button -->
+									</Grid.RowDefinitions>
+
+									<!-- ── Delete Button — Row 0 (TOP) ─────────────────── -->
+									<Button Grid.Row="0"
+											Text="🗑️ Delete"
+											FontSize="11"
+											FontAttributes="Bold"
+											BackgroundColor="#E53935"
+											TextColor="White"
+											CornerRadius="8"
+											HeightRequest="30"
+											Padding="0"
+											HorizontalOptions="Fill"
+											CommandParameter="{Binding .}"
+											Clicked="OnDeleteImageClicked"/>
+
+									<!-- ── Image Frame — Row 1 (MIDDLE) ─────────────────── -->
+									<Frame Grid.Row="1"
+										   CornerRadius="0"
+										   Padding="0"
+										   HasShadow="False"
+										   IsClippedToBounds="True"
+										   BackgroundColor="#E0E0E0"
+										   Margin="0">
+										<Grid>
+											<Image Source="{Binding DisplayPath}"
+												   Aspect="AspectFill"
+												   HeightRequest="100"
+												   WidthRequest="120"/>
+
+											<!-- Number Badge — top-left inside image -->
+											<Frame BackgroundColor="#4a6fc7"
+												   CornerRadius="6"
+												   Padding="4,2"
+												   HasShadow="False"
+												   HorizontalOptions="Start"
+												   VerticalOptions="Start"
+												   Margin="4,4,0,0">
+												<Label Text="{Binding Index}"
+													   FontSize="10"
+													   FontAttributes="Bold"
+													   TextColor="White"/>
+											</Frame>
+										</Grid>
+									</Frame>
+
+									<!-- ── Change Button — Row 2 (BOTTOM) ──────────────── -->
+									<Button Grid.Row="2"
+											Text="🔄 Change"
+											FontSize="11"
+											BackgroundColor="#4a6fc7"
+											TextColor="White"
+											CornerRadius="8"
+											HeightRequest="30"
+											Padding="0"
+											Margin="0,4,0,0"
+											HorizontalOptions="Fill"
+											CommandParameter="{Binding .}"
+											Clicked="OnReplaceImageClicked"/>
+
+								</Grid>
+							</DataTemplate>
+						</CollectionView.ItemTemplate>
+
+						<!-- Add More Card -->
+						<CollectionView.Footer>
+							<Frame WidthRequest="100"
+								   HeightRequest="165"
+								   CornerRadius="10"
+								   BackgroundColor="#E8EAF6"
+								   BorderColor="#4a6fc7"
+								   HasShadow="False"
+								   Margin="5,5,5,5">
+								<Frame.GestureRecognizers>
+									<TapGestureRecognizer Tapped="OnAddMoreTapped"/>
+								</Frame.GestureRecognizers>
+								<VerticalStackLayout VerticalOptions="Center"
+													 HorizontalOptions="Center"
+													 Spacing="4">
+									<Label Text="＋"
+										   FontSize="28"
+										   FontAttributes="Bold"
+										   TextColor="#4a6fc7"
+										   HorizontalOptions="Center"/>
+									<Label Text="Add More"
+										   FontSize="11"
+										   TextColor="#4a6fc7"
+										   HorizontalOptions="Center"/>
+								</VerticalStackLayout>
+							</Frame>
+						</CollectionView.Footer>
+
+					</CollectionView>
+
+				</VerticalStackLayout>
+			</Frame>
+
+			<!-- Category Selection -->
+			<Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
+                   CornerRadius="15"
+                   HasShadow="True"
+                   Padding="5"
+                   BorderColor="{AppThemeBinding Light=LightGray, Dark=#444444}">
+				<VerticalStackLayout Spacing="8">
+					<Label Text="Category"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light=#333, Dark=White}"/>
+					<Picker x:Name="CategoryPicker"
+                            ItemsSource="{Binding Categories}"
+                            ItemDisplayBinding="{Binding CategoriesName}"
+                            SelectedItem="{Binding SelectedCategory}"
+                            BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#3A3A3C}"
+                            TextColor="{AppThemeBinding Light=#333, Dark=White}"/>
+				</VerticalStackLayout>
+			</Frame>
+
+			<!-- Name Field -->
+			<StackLayout Spacing="8">
+				<Label Text="Name" FontSize="16" FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+				<Frame BorderColor="{AppThemeBinding Light=Gray, Dark=#555555}"
+                       BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
+                       CornerRadius="8" Padding="0" HasShadow="False">
+					<Entry x:Name="NameEntry" Placeholder="Enter item name"
+                           PlaceholderColor="{AppThemeBinding Light=#999, Dark=#777777}"
+                           TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                           BackgroundColor="Transparent" FontSize="14" HeightRequest="45"/>
+				</Frame>
+			</StackLayout>
+
+			<!-- Company Name Field -->
+			<StackLayout Spacing="8">
+				<Label Text="Company Name" FontSize="16" FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+				<Frame BorderColor="{AppThemeBinding Light=Gray, Dark=#555555}"
+                       BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
+                       CornerRadius="8" Padding="0" HasShadow="False">
+					<Entry x:Name="CompanyNameEntry" Placeholder="Enter company name"
+                           IsReadOnly="True"
+                           PlaceholderColor="{AppThemeBinding Light=#999, Dark=#777777}"
+                           TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                           BackgroundColor="Transparent" FontSize="14" HeightRequest="45"/>
+				</Frame>
+			</StackLayout>
+
+			<!-- Price Field -->
+			<StackLayout Spacing="8">
+				<Label Text="Price" FontSize="16" FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+				<Frame BorderColor="{AppThemeBinding Light=Gray, Dark=#555555}"
+                       BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
+                       CornerRadius="8" Padding="0" HasShadow="False">
+					<Entry x:Name="PriceEntry" Placeholder="Enter price" Keyboard="Numeric"
+                           PlaceholderColor="{AppThemeBinding Light=#999, Dark=#777777}"
+                           TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                           BackgroundColor="Transparent" FontSize="14" HeightRequest="45"/>
+				</Frame>
+			</StackLayout>
+
+			<!-- Description Field -->
+			<StackLayout Spacing="8">
+				<Label Text="Description" FontSize="16" FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+				<Frame BorderColor="{AppThemeBinding Light=Gray, Dark=#555555}"
+                       BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
+                       CornerRadius="8" Padding="0" HasShadow="False">
+					<Entry x:Name="DescriptionEntry" Placeholder="Enter item description"
+                           PlaceholderColor="{AppThemeBinding Light=#999, Dark=#777777}"
+                           TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                           BackgroundColor="Transparent" FontSize="14" HeightRequest="45"/>
+				</Frame>
+			</StackLayout>
+
+			<!-- Available From -->
+			<StackLayout Spacing="8">
+				<Label Text="Available From" FontSize="16" FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+				<Frame BorderColor="{AppThemeBinding Light=Gray, Dark=#555555}"
+                       BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
+                       CornerRadius="8" Padding="8" HasShadow="False">
+					<DatePicker x:Name="AvailableFromPicker" Format="dd-MMM-yyyy"
+                                FontSize="14"
+                                TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                                BackgroundColor="Transparent"/>
+				</Frame>
+			</StackLayout>
+
+			<!-- Status -->
+			<StackLayout Spacing="8">
+				<Label Text="Status" FontSize="16" FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+				<Frame BorderColor="{AppThemeBinding Light=Gray, Dark=#555555}"
+                       BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
+                       CornerRadius="8" Padding="0" HasShadow="False">
+					<Picker x:Name="StatusPicker" Title="Select Status" FontSize="14"
+                            TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                            TitleColor="{AppThemeBinding Light=#999, Dark=#777777}"
+                            BackgroundColor="Transparent">
+						<Picker.Items>
+							<x:String>Active</x:String>
+							<x:String>Inactive</x:String>
+							<x:String>Pending</x:String>
+						</Picker.Items>
+					</Picker>
+				</Frame>
+			</StackLayout>
+
+			<!-- Loading Indicator -->
+			<ActivityIndicator x:Name="LoadingIndicator"
+                               IsRunning="False" IsVisible="False"
+                               Color="#4a6fc7" HeightRequest="40"/>
+
+			<!-- Update Button -->
+			<Button x:Name="UpdateButton"
+                    Text="Update Item"
+                    BackgroundColor="#4a6fc7"
+                    TextColor="White"
+                    CornerRadius="10"
+                    FontSize="16"
+                    FontAttributes="Bold"
+                    HeightRequest="50"
+                    Margin="0,20,0,0"
+                    Clicked="OnUpdateClicked"/>
+
+		</VerticalStackLayout>
+	</ScrollView>
+
+</ContentPage>

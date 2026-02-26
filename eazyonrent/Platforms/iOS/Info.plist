@@ -73,10 +73,13 @@
 
 		<!-- Privacy (IMPORTANT FOR APP STORE) -->
 		<key>NSCameraUsageDescription</key>
-		<string>Camera is required to upload item images.</string>
+		<string>Needed to take photos of items for listing</string>
 
 		<key>NSPhotoLibraryUsageDescription</key>
-		<string>Photo library access is required to select images.</string>
+		<string>Needed to select photos from your library</string>
+
+		<key>NSPhotoLibraryAddUsageDescription</key>
+		<string>Needed to save or upload photos</string>
 
 		<key>NSLocationWhenInUseUsageDescription</key>
 		<string>Location is used to show nearby rental items.</string>

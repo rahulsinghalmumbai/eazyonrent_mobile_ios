@@ -3,28 +3,53 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="eazyonrent.Pages.ItemDetails"
              Title="Item Details"
-             BackgroundColor="#F8F9FA">
+             BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#1C1C1E}">
     <Grid RowDefinitions="*,Auto">
 
         <ScrollView>
             <VerticalStackLayout Spacing="20" Padding="16">
 
                 <!-- Image Gallery Section -->
-                <Frame BackgroundColor="White" CornerRadius="15" HasShadow="True" Padding="16">
+                <Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}" CornerRadius="15" HasShadow="True" Padding="16">
                     <VerticalStackLayout Spacing="15">
                         <!-- Main Image Display -->
                         <Frame CornerRadius="10" HasShadow="False" Padding="0" HeightRequest="300">
                             <Grid>
-                                <Image x:Name="MainImage" 
+                                <!--<Image x:Name="MainImage" 
                                    Source="{Binding CurrentImage}"
                                    Aspect="AspectFill"
-                                   BackgroundColor="#F0F0F0"/>
+                                   BackgroundColor="#F0F0F0"/>-->
 
+                                <!--<ScrollView x:Name="ImageScrollView"
+                Orientation="Both">
+
+                                    <Image x:Name="MainImage"
+               Source="{Binding CurrentImage}"
+               Aspect="AspectFit"
+                                           HorizontalOptions="Fill"
+               VerticalOptions="Fill"
+               BackgroundColor="#F0F0F0"/>-->
+                                <Image x:Name="MainImage"
+                                       Source="{Binding CurrentImage}"
+                                       Aspect="AspectFit"
+                                       HorizontalOptions="Fill"
+                                       VerticalOptions="Fill"
+                                       BackgroundColor="#F0F0F0">
+
+                                    <Image.GestureRecognizers>
+                                        <PinchGestureRecognizer PinchUpdated="OnPinchUpdated"/>
+                                        <PanGestureRecognizer PanUpdated="OnPanUpdated"/>
+                                    </Image.GestureRecognizers>
+
+                                </Image>
+
+
+                                <!--</ScrollView>-->
                                 <!-- Navigation Buttons -->
                                 <Button x:Name="PrevButton" 
                                     Text="❮" 
-                                    BackgroundColor="White" 
-                                    TextColor="Black"
+                                    BackgroundColor="{AppThemeBinding Light=White, Dark=#3A3A3C}" 
+                                    TextColor="{AppThemeBinding Light=Black, Dark=White}"
                                     WidthRequest="40" 
                                     HeightRequest="40"
                                     CornerRadius="20"
@@ -35,8 +60,8 @@
 
                                 <Button x:Name="NextButton" 
                                     Text="❯" 
-                                    BackgroundColor="White" 
-                                    TextColor="Black"
+                                    BackgroundColor="{AppThemeBinding Light=White, Dark=#3A3A3C}" 
+                                    TextColor="{AppThemeBinding Light=Black, Dark=White}"
                                     WidthRequest="40" 
                                     HeightRequest="40"
                                     CornerRadius="20"
@@ -51,20 +76,23 @@
                                                Spacing="5" 
                                                Margin="10">
                                     <Button Text="🔍+" 
-                                        BackgroundColor="White" 
-                                        TextColor="Black"
+                                        BackgroundColor="{AppThemeBinding Light=White, Dark=#3A3A3C}" 
+                                        TextColor="{AppThemeBinding Light=Black, Dark=White}"
                                         WidthRequest="40" 
                                         HeightRequest="40"
                                         CornerRadius="20"
-                                        Clicked="OnZoomInClicked"/>
+                                        Clicked="OnZoomInClicked"/> 
                                     <Button Text="🔍-" 
-                                        BackgroundColor="White" 
-                                        TextColor="Black"
+                                        BackgroundColor="{AppThemeBinding Light=White, Dark=#3A3A3C}" 
+                                        TextColor="{AppThemeBinding Light=Black, Dark=White}"
                                         WidthRequest="40" 
                                         HeightRequest="40"
                                         CornerRadius="20"
                                         Clicked="OnZoomOutClicked"/>
                                 </VerticalStackLayout>
+
+                               
+
 
                                 <!-- Image Counter -->
                                 <Label x:Name="ImageCounter"
@@ -102,7 +130,8 @@
                     </VerticalStackLayout>
                 </Frame>
 
-                <!-- Category Selection --><!--
+                <!-- Category Selection -->
+                <!--
                 <Frame BackgroundColor="White" CornerRadius="15" HasShadow="True" Padding="16">
                     <VerticalStackLayout Spacing="10">
                         <Label Text="Category" FontSize="16" FontAttributes="Bold" TextColor="#333"/>
@@ -116,70 +145,80 @@
                 </Frame>-->
 
                 <!-- Item Information -->
-                <Frame BackgroundColor="White" CornerRadius="15" HasShadow="True" Padding="16">
+                <Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}" CornerRadius="15" HasShadow="True" Padding="16">
                     <VerticalStackLayout Spacing="15">
                         <VerticalStackLayout Spacing="5">
-                            <Label Text="Category Name:" FontSize="14" TextColor="#666"/>
-                            <Label Text="{Binding ItemData.CategoryName}" FontSize="18" FontAttributes="Bold" TextColor="#333"/>
+                            <Button x:Name="EditButton" 
+        Text="Edit Item"
+        IsVisible="False"
+        Clicked="EditButton_Clicked"                            
+                                    />
+
+                            <Label Text="Category Name:" FontSize="14" TextColor="{AppThemeBinding Light=#666, Dark=#AAAAAA}"/>
+                            <Label Text="{Binding ItemData.CategoryName}" FontSize="18" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#333, Dark=White}"/>
                         </VerticalStackLayout>
 
                         <!-- Company Name -->
                         <VerticalStackLayout Spacing="5">
-                            <Label Text="Company Name:" FontSize="14" TextColor="#666"/>
-                            <Label Text="{Binding ItemData.CompanyName}" FontSize="18" FontAttributes="Bold" TextColor="#333"/>
+                            <Label Text="Company Name:" FontSize="14" TextColor="{AppThemeBinding Light=#666, Dark=#AAAAAA}"/>
+                            <Label Text="{Binding ItemData.CompanyName}" FontSize="18" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#333, Dark=White}"/>
                         </VerticalStackLayout>
 
                         <!-- Item Name -->
                         <VerticalStackLayout Spacing="5">
-                            <Label Text="Item Name:" FontSize="14" TextColor="#666"/>
+                            <Label Text="Item Name:" FontSize="14" TextColor="{AppThemeBinding Light=#666, Dark=#AAAAAA}"/>
                             <Label Text="{Binding ItemData.ItemName}" FontSize="22" FontAttributes="Bold" TextColor="#1E40AF"/>
                         </VerticalStackLayout>
 
                         <!-- Description -->
                         <VerticalStackLayout Spacing="5">
-                            <Label Text="Description:" FontSize="14" TextColor="#666"/>
-                            <Label Text="{Binding ItemData.ItemDescriptions}" FontSize="16" TextColor="#333" LineBreakMode="WordWrap"/>
+                            <Label Text="Description:" FontSize="14" TextColor="{AppThemeBinding Light=#666, Dark=#AAAAAA}"/>
+                            <Label Text="{Binding ItemData.ItemDescriptions}" FontSize="16" TextColor="{AppThemeBinding Light=#333, Dark=White}" LineBreakMode="WordWrap"/>
                         </VerticalStackLayout>
 
                         <!-- Cost -->
                         <VerticalStackLayout Spacing="5">
-                            <Label Text="Cost:" FontSize="14" TextColor="#666"/>
+                            <Label Text="Cost:" FontSize="14" TextColor="{AppThemeBinding Light=#666, Dark=#AAAAAA}"/>
                             <Label Text="{Binding FormattedCost}" FontSize="28" FontAttributes="Bold" TextColor="#059669"/>
                         </VerticalStackLayout>
 
                         <!-- Available From -->
                         <VerticalStackLayout Spacing="5">
-                            <Label Text="Available From:" FontSize="14" TextColor="#666"/>
-                            <Label Text="{Binding FormattedAvailableDate}" FontSize="16" TextColor="#333"/>
+                            <Label Text="Available From:" FontSize="14" TextColor="{AppThemeBinding Light=#666, Dark=#AAAAAA}"/>
+                            <Label Text="{Binding FormattedAvailableDate}" FontSize="16" TextColor="{AppThemeBinding Light=#333, Dark=White}"/>
                         </VerticalStackLayout>
 
                         <!-- Location -->
                         <VerticalStackLayout Spacing="5">
-                            <Label Text="Location:" FontSize="14" TextColor="#666"/>
-                            <Label Text="{Binding ItemData.Location}" FontSize="16" TextColor="#333"/>
+                            <Label Text="Location:" FontSize="14" TextColor="{AppThemeBinding Light=#666, Dark=#AAAAAA}"/>
+                            <Label Text="{Binding ItemData.Location}" FontSize="16" TextColor="{AppThemeBinding Light=#333, Dark=White}"/>
                         </VerticalStackLayout>
 
-                        <!-- Booking Status -->
-                        <VerticalStackLayout Spacing="5">
-                            <Label Text="Status:" FontSize="14" TextColor="#666"/>
-                            <Frame BackgroundColor="#DCFCE7" CornerRadius="20" HasShadow="False" Padding="12,6">
-                                <Label Text="Available" TextColor="#166534" FontAttributes="Bold" HorizontalOptions="Center"/>
-                            </Frame>
-                        </VerticalStackLayout>
+						<!-- Booking Status -->
+						<VerticalStackLayout Spacing="5">
+							<Label Text="Status:" FontSize="14" TextColor="{AppThemeBinding Light=#666, Dark=#AAAAAA}"/>
+							<Frame BackgroundColor="{Binding StatusBackgroundColor}"
+								   CornerRadius="20" HasShadow="False" Padding="12,6">
+								<Label Text="{Binding StatusText}"
+									   TextColor="{Binding StatusTextColor}"
+									   FontAttributes="Bold"
+									   HorizontalOptions="Center"/>
+							</Frame>
+						</VerticalStackLayout>
 
                         <!-- Rating and Views -->
                         <Grid ColumnDefinitions="*,*" ColumnSpacing="20">
                             <VerticalStackLayout Grid.Column="0" Spacing="5">
-                                <Label Text="Rating:" FontSize="14" TextColor="#666"/>
+                                <Label Text="Rating:" FontSize="14" TextColor="{AppThemeBinding Light=#666, Dark=#AAAAAA}"/>
                                 <HorizontalStackLayout Spacing="5">
                                     <Label Text="⭐⭐⭐⭐⭐" FontSize="18"/>
-                                    <Label Text="Very Good" FontSize="14" TextColor="#666" VerticalOptions="Center"/>
+                                    <Label Text="Very Good" FontSize="14" TextColor="{AppThemeBinding Light=#666, Dark=#AAAAAA}" VerticalOptions="Center"/>
                                 </HorizontalStackLayout>
                             </VerticalStackLayout>
 
                             <VerticalStackLayout Grid.Column="1" Spacing="5">
-                                <Label Text="Views:" FontSize="14" TextColor="#666"/>
-                                <Label Text="{Binding ViewCount}" FontSize="16" TextColor="#333"/>
+                                <Label Text="Views:" FontSize="14" TextColor="{AppThemeBinding Light=#666, Dark=#AAAAAA}"/>
+                                <Label Text="{Binding ViewCount}" FontSize="16" TextColor="{AppThemeBinding Light=#333, Dark=White}"/>
                             </VerticalStackLayout>
                         </Grid>
 
@@ -187,9 +226,9 @@
                 </Frame>
 
                 <!-- Similar Items Section -->
-                <Frame BackgroundColor="White" CornerRadius="15" HasShadow="True" Padding="16">
+                <Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}" CornerRadius="15" HasShadow="True" Padding="16">
                     <VerticalStackLayout Spacing="15">
-                        <Label Text="Similar Items" FontSize="20" FontAttributes="Bold" TextColor="#333"/>
+                        <Label Text="Similar Items" FontSize="20" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#333, Dark=White}"/>
 
                         <CollectionView x:Name="SimilarItemsCollection" 
                                     ItemsSource="{Binding SimilarItems}"
@@ -198,7 +237,7 @@
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Padding="10" WidthRequest="180">
-                                        <Frame BackgroundColor="#F8F9FA" CornerRadius="10" HasShadow="True" Padding="12">
+                                        <Frame BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#3A3A3C}" CornerRadius="10" HasShadow="True" Padding="12">
                                             <VerticalStackLayout Spacing="10">
                                                 <Image Source="{Binding Images[0]}" 
                                                    WidthRequest="140" 
@@ -207,7 +246,7 @@
                                                 <Label Text="{Binding ItemName}" 
                                                    FontSize="14" 
                                                    FontAttributes="Bold" 
-                                                   TextColor="#333"
+                                                   TextColor="{AppThemeBinding Light=#333, Dark=White}"
                                                    LineBreakMode="TailTruncation"/>
                                                 <Label Text="{Binding ItemCost, StringFormat='₹{0}'}" 
                                                    FontSize="16" 
@@ -222,7 +261,7 @@
                                             </Frame.GestureRecognizers>
                                         </Frame>
 
-                                        
+
                                     </Grid>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
@@ -235,7 +274,7 @@
 
             </VerticalStackLayout>
         </ScrollView>
-        <Frame BackgroundColor="White" HasShadow="True" Padding="16" Grid.Row="1">
+        <Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}" HasShadow="True" Padding="16" Grid.Row="1">
             <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
                 <Button Grid.Column="0"
                   Text="💬 Chat"

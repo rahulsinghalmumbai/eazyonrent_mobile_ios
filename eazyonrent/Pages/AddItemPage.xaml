@@ -3,63 +3,117 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="eazyonrent.Pages.AddItemPage"
              Title="Add Item"
-             BackgroundColor="White">
+             BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#1C1C1E}">
 
     <ScrollView Padding="20">
         <VerticalStackLayout Spacing="20">
 
-            <!-- Header with Camera Icon -->
-            <Frame BackgroundColor="#F5F5F5" 
-                   HeightRequest="140" 
+            <!-- IMAGE SECTION -->
+            <Frame BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#2C2C2E}"
                    CornerRadius="10"
                    HasShadow="True"
-                   BorderColor="Gray">
-                <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
-                    <Frame BackgroundColor="White" 
-                           CornerRadius="8" 
-                           Padding="20"
-                           HasShadow="False"
-                           BorderColor="LightGray">
-                        <Button x:Name="CameraButton"
-                               Text="📷" 
-                               FontSize="30"
-                               BackgroundColor="Transparent"
-                               TextColor="Gray"
-                               BorderWidth="0"
-                               Clicked="OnCameraClicked"
+                   Padding="12"
+                   BorderColor="{AppThemeBinding Light=Gray, Dark=#444444}">
+
+                <VerticalStackLayout Spacing="10">
+
+                    <!-- Top row: Add Image button + count badge -->
+                    <Grid ColumnDefinitions="*, Auto">
+
+                        <Button Grid.Column="0"
+                                x:Name="CameraButton"
+                                Text="📷  Add Image"
+                                FontSize="15"
+                                FontAttributes="Bold"
+                                BackgroundColor="#4a6fc7"
+                                TextColor="White"
+                                CornerRadius="8"
+                                HeightRequest="45"
+                                HorizontalOptions="FillAndExpand"
+                                Clicked="OnCameraClicked"/>
+
+                        <Frame Grid.Column="1"
+                               x:Name="ImageCountBadge"
+                               IsVisible="False"
+                               BackgroundColor="#28A745"
+                               CornerRadius="12"
+                               Padding="10,4"
+                               HasShadow="False"
+                               Margin="8,0,0,0"
+                               VerticalOptions="Center">
+                            <Label x:Name="ImageCountLabel"
+                                   Text="0 images"
+                                   FontSize="12"
+                                   FontAttributes="Bold"
+                                   TextColor="White"/>
+                        </Frame>
+                    </Grid>
+
+                    <!-- Empty state placeholder -->
+                    <StackLayout x:Name="EmptyImagePlaceholder"
+                                 IsVisible="True"
+                                 HorizontalOptions="Center"
+                                 Spacing="4">
+                        <Label Text="No images selected"
+                               FontSize="13"
                                HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-                    </Frame>
-                </StackLayout>
+                               TextColor="{AppThemeBinding Light=#999, Dark=#777777}"/>
+                        <Label Text="Tap 'Add Image' to pick from camera or gallery"
+                               FontSize="11"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               TextColor="{AppThemeBinding Light=#BBBBBB, Dark=#555555}"/>
+                    </StackLayout>
+
+                    <!-- Horizontal image preview scroll strip -->
+                    <ScrollView x:Name="ImageScrollView"
+                                Orientation="Horizontal"
+                                IsVisible="False"
+                                HorizontalScrollBarVisibility="Never">
+                        <StackLayout x:Name="ImagePreviewStack"
+                                     Orientation="Horizontal"
+                                     Spacing="10"
+                                     Padding="4"/>
+                    </ScrollView>
+
+                </VerticalStackLayout>
             </Frame>
 
-            <!-- Code Field -->
             <!-- Category Selection -->
-            <Frame BackgroundColor="White" CornerRadius="15" HasShadow="True" Padding="5">
+            <Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
+                   CornerRadius="15"
+                   HasShadow="True"
+                   Padding="5"
+                   BorderColor="{AppThemeBinding Light=LightGray, Dark=#444444}">
                 <VerticalStackLayout Spacing="8">
-                    <Label Text="Category" FontSize="16" FontAttributes="Bold" TextColor="#333"/>
-                    <Picker x:Name="CategoryPicker" 
+                    <Label Text="Category"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light=#333, Dark=White}"/>
+                    <Picker x:Name="CategoryPicker"
                             ItemsSource="{Binding Categories}"
                             ItemDisplayBinding="{Binding CategoriesName}"
                             SelectedItem="{Binding SelectedCategory}"
-                            BackgroundColor="#F8F9FA"
-                            TextColor="#333"/>
+                            BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#3A3A3C}"
+                            TextColor="{AppThemeBinding Light=#333, Dark=White}"/>
                 </VerticalStackLayout>
             </Frame>
 
             <!-- Name Field -->
             <StackLayout Spacing="8">
-                <Label Text="Name" 
-                       FontSize="16" 
+                <Label Text="Name"
+                       FontSize="16"
                        FontAttributes="Bold"
-                       TextColor="Black"/>
-                <Frame BorderColor="Gray" 
-                       BackgroundColor="White" 
-                       CornerRadius="8" 
+                       TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                <Frame BorderColor="{AppThemeBinding Light=Gray, Dark=#555555}"
+                       BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
+                       CornerRadius="8"
                        Padding="0"
                        HasShadow="False">
-                    <Entry x:Name="NameEntry" 
+                    <Entry x:Name="NameEntry"
                            Placeholder="Enter item name"
+                           PlaceholderColor="{AppThemeBinding Light=#999, Dark=#777777}"
+                           TextColor="{AppThemeBinding Light=Black, Dark=White}"
                            BackgroundColor="Transparent"
                            FontSize="14"
                            HeightRequest="45"/>
@@ -68,17 +122,19 @@
 
             <!-- Price Field -->
             <StackLayout Spacing="8">
-                <Label Text="Price" 
-                       FontSize="16" 
+                <Label Text="Price"
+                       FontSize="16"
                        FontAttributes="Bold"
-                       TextColor="Black"/>
-                <Frame BorderColor="Gray" 
-                       BackgroundColor="White" 
-                       CornerRadius="8" 
+                       TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                <Frame BorderColor="{AppThemeBinding Light=Gray, Dark=#555555}"
+                       BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
+                       CornerRadius="8"
                        Padding="0"
                        HasShadow="False">
-                    <Entry x:Name="PriceEntry" 
+                    <Entry x:Name="PriceEntry"
                            Placeholder="Enter price"
+                           PlaceholderColor="{AppThemeBinding Light=#999, Dark=#777777}"
+                           TextColor="{AppThemeBinding Light=Black, Dark=White}"
                            Keyboard="Numeric"
                            BackgroundColor="Transparent"
                            FontSize="14"
@@ -88,17 +144,19 @@
 
             <!-- Description Field -->
             <StackLayout Spacing="8">
-                <Label Text="Description" 
-                       FontSize="16" 
+                <Label Text="Description"
+                       FontSize="16"
                        FontAttributes="Bold"
-                       TextColor="Black"/>
-                <Frame BorderColor="Gray" 
-                       BackgroundColor="White" 
-                       CornerRadius="8" 
+                       TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                <Frame BorderColor="{AppThemeBinding Light=Gray, Dark=#555555}"
+                       BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
+                       CornerRadius="8"
                        Padding="0"
                        HasShadow="False">
-                    <Entry x:Name="HomeCostEntry" 
+                    <Entry x:Name="HomeCostEntry"
                            Placeholder="Enter Item Description"
+                           PlaceholderColor="{AppThemeBinding Light=#999, Dark=#777777}"
+                           TextColor="{AppThemeBinding Light=Black, Dark=White}"
                            BackgroundColor="Transparent"
                            FontSize="14"
                            HeightRequest="45"/>
@@ -107,25 +165,26 @@
 
             <!-- Available From Field -->
             <StackLayout Spacing="8">
-                <Label Text="Available From" 
-                       FontSize="16" 
+                <Label Text="Available From"
+                       FontSize="16"
                        FontAttributes="Bold"
-                       TextColor="Black"/>
-                <Frame BorderColor="Gray" 
-                       BackgroundColor="White" 
-                       CornerRadius="8" 
+                       TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                <Frame BorderColor="{AppThemeBinding Light=Gray, Dark=#555555}"
+                       BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
+                       CornerRadius="8"
                        Padding="8"
                        HasShadow="False">
                     <Grid ColumnDefinitions="*,Auto">
-                        <DatePicker x:Name="AvailableFromPicker" 
-                                  Grid.Column="0"
-                                  FontSize="14"
-                                  TextColor="Black"
-                                  BackgroundColor="Transparent"/>
+                        <DatePicker x:Name="AvailableFromPicker"
+                                    Format="dd-MMM-yyyy"
+                                    Grid.Column="0"
+                                    FontSize="14"
+                                    TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                                    BackgroundColor="Transparent"/>
                         <!--<Button x:Name="SendButton"
                                 Grid.Column="1"
-                                Text="Send" 
-                                BackgroundColor="#4A90E2" 
+                                Text="Send"
+                                BackgroundColor="#4A90E2"
                                 TextColor="White"
                                 CornerRadius="6"
                                 WidthRequest="80"
@@ -138,19 +197,20 @@
 
             <!-- Status Field -->
             <StackLayout Spacing="8">
-                <Label Text="Status" 
-                       FontSize="16" 
+                <Label Text="Status"
+                       FontSize="16"
                        FontAttributes="Bold"
-                       TextColor="Black"/>
-                <Frame BorderColor="Gray" 
-                       BackgroundColor="White" 
-                       CornerRadius="8" 
+                       TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                <Frame BorderColor="{AppThemeBinding Light=Gray, Dark=#555555}"
+                       BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
+                       CornerRadius="8"
                        Padding="0"
                        HasShadow="False">
-                    <Picker x:Name="StatusPicker" 
+                    <Picker x:Name="StatusPicker"
                             Title="Select Status"
                             FontSize="14"
-                            TextColor="Black"
+                            TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                            TitleColor="{AppThemeBinding Light=#999, Dark=#777777}"
                             BackgroundColor="Transparent">
                         <Picker.Items>
                             <x:String>Active</x:String>

@@ -3,47 +3,65 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="eazyonrent.Pages.GuesPage"
             NavigationPage.HasNavigationBar="False"
-             BackgroundColor="#F8F9FA">
+             BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#1C1C1E}">
 
     <Grid RowDefinitions="*, Auto">
 
         <!-- Main Content Area -->
         <ScrollView Grid.Row="0">
             <StackLayout Padding="10" Spacing="15">
-
                 <!-- Advertisement Section -->
-                <Frame BackgroundColor="#FF6B35" 
-                       CornerRadius="12" 
-                       Padding="15" 
-                       HasShadow="True">
-                    <StackLayout>
-                        <Label Text="🎉 Special Offers!" 
-                               FontSize="18" 
-                               FontAttributes="Bold" 
-                               TextColor="White" 
-                               HorizontalOptions="Center"/>
-                        <Label Text="Get 20% off on your first rental!" 
-                               FontSize="14" 
-                               TextColor="White" 
-                               HorizontalOptions="Center"/>
-                    </StackLayout>
+                <Frame BackgroundColor="#FF6B39"
+       CornerRadius="12"
+       Padding="15"
+       HasShadow="True">
+
+                    <Grid ColumnDefinitions="Auto,*"
+          VerticalOptions="Center">
+
+                        <!-- Left Side Logo -->
+                        <Image Grid.Column="0"
+                                   Source="logo.jpeg"
+                                   HeightRequest="45"
+                                   WidthRequest="45"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Start" />
+
+                        <!-- Right Side Text -->
+                        <Label Grid.Column="1"
+                               Text="🛒 EazyOnRent"
+                               FontSize="25"
+                               FontAttributes="Bold"
+                               TextColor="White"
+                               VerticalOptions="Center"
+                               HorizontalOptions="CenterAndExpand"
+                               Margin="10,0,0,0"/>
+
+                    </Grid>
+
                 </Frame>
 
+
                 <!-- Search and Filter Section -->
-                <Grid ColumnDefinitions="*, Auto" 
+                <!--<Grid ColumnDefinitions="*, Auto" 
                       ColumnSpacing="10">
 
-                    <!-- Search Entry -->
+                    -->
+                <!-- Search Entry -->
+                <!--
                     <Entry Grid.Column="0" 
                            x:Name="SearchEntry"
                            Placeholder="Search items..." 
-                           BackgroundColor="White"
+                           TextChanged="OnSearchTextChanged"
+                           BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
                            PlaceholderColor="#999"
-                           TextColor="Black"
+                           TextColor="{AppThemeBinding Light=Black, Dark=White}"
                            FontSize="16"
                            HeightRequest="45"/>
 
-                    <!-- Category Filter Button -->
+                    -->
+                <!-- Category Filter Button -->
+                <!--
                     <Button Grid.Column="1"
                             x:Name="CategoryFilterBtn"
                             Text="🔽 Filter"
@@ -54,12 +72,51 @@
                             WidthRequest="80"
                             HeightRequest="45"
                             Clicked="OnCategoryFilterClicked"/>
+                </Grid>-->
+
+                <Grid ColumnDefinitions="*, Auto, Auto"
+      ColumnSpacing="5">
+
+                    <!-- Search Entry -->
+                    <Entry Grid.Column="0"
+           x:Name="SearchEntry"
+           Placeholder="Search items..."
+           TextChanged="OnSearchTextChanged"
+           BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
+           PlaceholderColor="#999"
+           TextColor="{AppThemeBinding Light=Black, Dark=White}"
+           FontSize="16"
+           HeightRequest="45"/>
+
+                    <!-- Clear Category Button -->
+                    <Button Grid.Column="1"
+                            x:Name="ClearCategoryBtn"
+                            Text="✖"
+                            WidthRequest="40"
+                            HeightRequest="45"
+                            BackgroundColor="Red"
+                            TextColor="White"
+                            CornerRadius="8"
+                            IsVisible="False"
+                            Clicked="OnClearCategoryClicked"/>
+
+                    <!-- Category Filter Button -->
+                    <Button Grid.Column="2"
+                            x:Name="CategoryFilterBtn"
+                            Text="🔽 Filter"
+                            BackgroundColor="#007BFF"
+                            TextColor="White"
+                            FontSize="12"
+                            CornerRadius="8"
+                            WidthRequest="80"
+                            HeightRequest="45"
+                            Clicked="OnCategoryFilterClicked"/>
                 </Grid>
 
                 <!-- Category Filter Dropdown (Initially Hidden) -->
                 <Frame x:Name="CategoryFilterLayout" 
                        IsVisible="False"
-                       BackgroundColor="White"
+                       BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
                        CornerRadius="8"
                        HasShadow="True"
                        Padding="0">
@@ -77,7 +134,7 @@
 
                                     <Label Text="{Binding CategoriesName}" 
                                            FontSize="14" 
-                                           TextColor="#333"
+                                           TextColor="{AppThemeBinding Light=#333, Dark=White}"
                                            VerticalOptions="Center"/>
 
                                     <!-- Selection Indicator -->
@@ -109,11 +166,11 @@
 
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <Frame BackgroundColor="White" 
+                            <Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}" 
                                    CornerRadius="12" 
                                    Padding="0" 
                                    HasShadow="True"
-                                   HeightRequest="280">
+                                   HeightRequest="290">
 
                                 <StackLayout Spacing="8">
 
@@ -141,7 +198,7 @@
                                                    HeightRequest="20"/>
 
                                     <!-- Item Details -->
-                                    <StackLayout Padding="12,0,12,12" Spacing="4">
+                                    <StackLayout Padding="12,0,12,15" Spacing="5">
 
                                         <!-- Company Name -->
                                         <Label Text="{Binding CompanyName}" 
@@ -154,7 +211,7 @@
                                         <Label Text="{Binding ItemName}" 
                                                FontSize="14" 
                                                FontAttributes="Bold" 
-                                               TextColor="Black"
+                                               TextColor="{AppThemeBinding Light=Black, Dark=White}"
                                                LineBreakMode="TailTruncation"/>
 
                                         <!-- Location -->
@@ -162,7 +219,7 @@
                                             <Label Text="📍" FontSize="12"/>
                                             <Label Text="Noida" 
                                                    FontSize="12" 
-                                                   TextColor="#666"
+                                                   TextColor="{AppThemeBinding Light=#666, Dark=#AAAAAA}"
                                                    LineBreakMode="TailTruncation"/>
                                         </StackLayout>
 
@@ -204,7 +261,9 @@
                   HeightRequest="70" 
                   BackgroundColor="White">
 
-                 --><!--Home Button--><!-- 
+                 -->
+        <!--Home Button-->
+        <!-- 
                 <StackLayout Grid.Column="0" 
                              Spacing="2"
                              VerticalOptions="Center">
@@ -223,7 +282,9 @@
                            FontAttributes="Bold"/>
                 </StackLayout>
 
-                 --><!--Search Button--><!-- 
+                 -->
+        <!--Search Button-->
+        <!-- 
                 <StackLayout Grid.Column="1" 
                              Spacing="2"
                              VerticalOptions="Center">
@@ -242,7 +303,9 @@
                            FontAttributes="Bold"/>
                 </StackLayout>
 
-                 --><!--Add Item Button (Center/Plus Button)--><!-- 
+                 -->
+        <!--Add Item Button (Center/Plus Button)-->
+        <!-- 
                 <StackLayout Grid.Column="2" 
                              Spacing="2"
                              VerticalOptions="Center">
@@ -267,7 +330,9 @@
                     </Frame>
                 </StackLayout>
 
-                 --><!--Orders/Bookings Button--><!-- 
+                 -->
+        <!--Orders/Bookings Button-->
+        <!-- 
                 <StackLayout Grid.Column="3" 
                              Spacing="2"
                              VerticalOptions="Center">
@@ -286,7 +351,9 @@
                            FontAttributes="Bold"/>
                 </StackLayout>
 
-                 --><!--Profile Button--><!-- 
+                 -->
+        <!--Profile Button-->
+        <!-- 
                 <StackLayout Grid.Column="4" 
                              Spacing="2"
                              VerticalOptions="Center">
@@ -311,7 +378,7 @@
 
         <!-- Footer Menu -->
         <Frame Grid.Row="1"
-       BackgroundColor="White"
+       BackgroundColor="{AppThemeBinding Light=White, Dark=#1C1C1E}"
        CornerRadius="0"
        Padding="0"
        HasShadow="True"
@@ -320,7 +387,7 @@
 
             <Grid ColumnDefinitions="*,*,*,*,*"
           HeightRequest="70"
-          BackgroundColor="White">
+          BackgroundColor="{AppThemeBinding Light=White, Dark=#1C1C1E}">
 
 
                 <StackLayout Grid.Column="0" 
@@ -337,7 +404,7 @@
                     <Label Text="Home" 
               FontSize="10" 
               HorizontalOptions="Center" 
-              TextColor="#666"
+              TextColor="{AppThemeBinding Light=#666, Dark=#AAAAAA}"
               FontAttributes="Bold"/>
                 </StackLayout>
 
@@ -352,11 +419,11 @@
                     <Label Text="🔍" 
               FontSize="24" 
               HorizontalOptions="Center" 
-              TextColor="#666"/>
+              TextColor="{AppThemeBinding Light=#666, Dark=#AAAAAA}"/>
                     <Label Text="Search" 
               FontSize="10" 
               HorizontalOptions="Center" 
-              TextColor="#666"
+              TextColor="{AppThemeBinding Light=#666, Dark=#AAAAAA}"
               FontAttributes="Bold"/>
                 </StackLayout>
 
@@ -415,19 +482,19 @@
                     <Label Text="👤" 
               FontSize="24" 
               HorizontalOptions="Center" 
-              TextColor="#666"/>
+              TextColor="{AppThemeBinding Light=#666, Dark=#AAAAAA}"/>
                     <Label Text="Profile" 
               FontSize="10" 
               HorizontalOptions="Center" 
-              TextColor="#666"
+              TextColor="{AppThemeBinding Light=#666, Dark=#AAAAAA}"
               FontAttributes="Bold"/>
                 </StackLayout>
-                
-               
 
-                
-                
-                
+
+
+
+
+
             </Grid>
         </Frame>
 

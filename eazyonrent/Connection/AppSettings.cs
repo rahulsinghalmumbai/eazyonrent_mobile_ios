@@ -5,7 +5,7 @@ namespace eazyonrent.Connection
     public class AppSettings
     {
 
-        public const string BaseApiUrl = "https://eazyonrent.com/api/";
+        public const string BaseApiUrl = "https://api.eazyonrent.com/api/";
        // public const string BaseApiUrl = "https://localhost:7274/api/";
     }
     public static class Endpoints
@@ -18,7 +18,7 @@ namespace eazyonrent.Connection
         public const string GetAllCat = "Categories/GellALLCategories";
 
         //3.for itme images
-        public const string GetGuestItem = "Lister/GetGuestItems";
+        public const string GetGuestItem = "Lister/GetGuestItems?";
         //4.for item details by id
         public const string GetItemDetailsById = "Lister/GetItemById";
         //5.for profile item by user(lister) id
@@ -35,9 +35,11 @@ namespace eazyonrent.Connection
         //9.for upload item images
         public const string AddItmeImages = "Lister/uploadItemImages";
 
-        public const string BookItem = "Lister/bookItem";
-        
+        public const string UpdateItemImage = "Lister/updateItemImage";
 
+        public const string BookItem = "Lister/bookItem";
+
+        public const string UpdateItem = "Lister/editListerItem"; 
         public const string HistoryItme = "Lister/bookHistory";
     }
 }

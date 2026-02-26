@@ -22,11 +22,20 @@ public partial class LoginPage : ContentPage
             var loginResult = await loginServices.LoginAsync(PasswordEntry.Text.Trim());
             if (loginResult != null && loginResult.ResponseCode == "200")
             {
-                await SecureStorage.SetAsync("mobile", PasswordEntry.Text.Trim()); 
+                await SecureStorage.SetAsync("mobile", PasswordEntry.Text.Trim());
 
+                if (loginResult.ListerId != null)
+                {
+                    await SecureStorage.SetAsync("ListerIdFirst",
+                        loginResult.ListerId.ToString());
+                }
 
-                await SecureStorage.SetAsync("ListerId", loginResult.ExistUser.ListerId.ToString());
-                await SecureStorage.SetAsync("ListerIdFirst", loginResult.ListerId.ToString());
+                if (loginResult.ExistUser != null &&
+                    loginResult.ExistUser.ListerId != null)
+                {
+                    await SecureStorage.SetAsync("ListerId",
+                        loginResult.ExistUser.ListerId.ToString());
+                }
 
                 // await DisplayAlert("Success", "Login Successfully..", "OK");
                 await Navigation.PushAsync(new GuesPage());
